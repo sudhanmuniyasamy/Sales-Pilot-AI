@@ -102,36 +102,6 @@ Built with **Angular 21** (Signals & SSR) and powered by **Google Gemini AI (`@g
 
 ---
 
-## 🏛️ System Architecture
-
-```mermaid
-graph TD
-    User([Enterprise User / CRO / Rep]) <-->|Browser / Mobile| WebApp[Angular 21 Client Application]
-    
-    subgraph "Frontend Layer (Angular 21)"
-        WebApp --> Signals[Signal Reactive State]
-        Signals --> Bento[Bento Command Deck]
-        Signals --> Leads[MEDDPICC Deal Inspector]
-        Signals --> FX[Multi-Currency FX Engine]
-        Signals --> CopilotUI[AI Copilot Interface]
-        WebApp --> PDFGen[jsPDF Document Engine]
-    end
-
-    subgraph "Backend Layer (Node.js & Express 5 SSR)"
-        WebApp <-->|HTTP / REST| ExpressServer[Express SSR Server]
-        ExpressServer --> AngularSSR[AngularNodeAppEngine]
-        ExpressServer --> APIChat[/api/chat Endpoint/]
-        ExpressServer --> APIFX[/api/fx-rates Endpoint/]
-    end
-
-    subgraph "External Intelligence & Feeds"
-        APIChat <-->|@google/genai| GeminiAPI[Google Gemini Models\n- gemini-3.5-flash\n- gemini-3.1-pro-preview\n- gemini-3.1-flash-lite]
-        APIFX <-->|REST API| FXFeed[Open Exchange Rates Live Feed]
-    end
-```
-
----
-
 ## 📂 Project Structure
 
 ```
