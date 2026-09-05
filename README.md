@@ -1,7 +1,7 @@
 # Sales Pilot AI
 
 <div align="center">
-  <img width="1200" height="475" alt="Sales Pilot AI Header Banner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+  <img width="1200" height="475" alt="Sales Pilot AI Header Banner" src="" />
 
   <p align="center">
     <strong>Next-Generation Enterprise Revenue Operations & Autonomous Sales Copilot Platform</strong>
