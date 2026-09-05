@@ -221,14 +221,6 @@ npm run serve:ssr:app
 | **Outreach Specialist** | Personalized Inbound/Outbound, Objections | *"Draft a persuasive follow-up email to the VP of Engineering addressing security and SOC-2 compliance concerns."* |
 | **Revenue Scientist** | Velocity Calculations, Win-Rate Statistics | *"Analyze our average sales cycle across APAC vs. EMEA and identify key velocity bottlenecks."* |
 
----
-
-## 🛡️ License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-<div align="center">
-  <sub>Engineered with ❤️ using Angular 21, Google Gemini AI, and Tailwind CSS.</sub>
-</div>
