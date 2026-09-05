@@ -15,6 +15,498 @@
     </div>
   }
 
+  @if (!isAuthenticated()) {
+    <!-- ========================================================================= -->
+    <!-- UN-AUTHENTICATED: FULL-SCREEN ENTERPRISE AUTH GATEWAY                    -->
+    <!-- ========================================================================= -->
+    <div id="auth-gateway-screen" class="flex-1 w-full h-full overflow-y-auto bg-[#F6F3EC] flex flex-col justify-between relative selection:bg-[#A9772D]/20 z-50">
+      
+      <!-- Ambient Graphic Glows -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-[#A9772D]/5 blur-3xl"></div>
+        <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-[#0B6B53]/5 blur-3xl"></div>
+      </div>
+
+      <!-- Top Header Ribbon -->
+      <header class="w-full border-b border-[#EAE4D4] bg-[#FFFFFF]/80 backdrop-blur-md px-6 sm:px-10 py-4 flex items-center justify-between shrink-0 z-10">
+        <div class="flex items-center space-x-3">
+          <div class="w-9 h-9 rounded-xl bg-[#17150F] text-[#F6F3EC] flex items-center justify-center font-display font-bold text-base shadow-xs">
+            S
+          </div>
+          <div>
+            <span class="font-display font-bold text-sm tracking-tight text-[#17150F]">SALES PILOT AI</span>
+            <span class="hidden sm:inline-block ml-2 px-1.5 py-0.5 rounded bg-[#0B6B53]/10 text-[#0B6B53] text-[10px] font-mono font-bold uppercase tracking-wider">
+              ENTERPRISE GATEWAY
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-3">
+          <span class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-[#0B6B53]/10 border border-[#0B6B53]/20 text-[11px] font-mono text-[#0B6B53] font-medium">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#0B6B53] animate-pulse"></span>
+            <span>TLS 1.3 • SOC2 Certified</span>
+          </span>
+        </div>
+      </header>
+
+      <!-- Center Container: Split Grid (Left: Intelligence Preview | Right: Pure Auth Card) -->
+      <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex items-center justify-center z-10">
+        <div class="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          <!-- Left Column: Platform Intelligence & Forensics Value (6 Cols on desktop) -->
+          <div class="lg:col-span-6 space-y-6 text-left">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#A9772D]/10 border border-[#A9772D]/25 text-[#A9772D] text-xs font-mono font-bold uppercase tracking-wider">
+              <mat-icon class="text-sm">security</mat-icon>
+              <span>Autonomous Revenue Intelligence</span>
+            </div>
+
+            <div class="space-y-3">
+              <h1 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-[#17150F] tracking-tight leading-tight">
+                Accelerate Enterprise Velocity With Precision Telemetry.
+              </h1>
+              <p class="text-sm sm:text-base text-[#5C5645] font-body leading-relaxed max-w-xl">
+                Log in with your enterprise account to access real-time MEDDPICC forensics, multi-scenario Monte Carlo revenue modeling, and our context-grounded AI copilot.
+              </p>
+            </div>
+
+            <!-- Value Prop Highlights -->
+            <div class="space-y-3.5 pt-2">
+              <div class="flex items-start space-x-3">
+                <div class="w-7 h-7 rounded-lg bg-[#0B6B53]/10 border border-[#0B6B53]/25 text-[#0B6B53] flex items-center justify-center shrink-0 mt-0.5">
+                  <mat-icon class="text-sm">insights</mat-icon>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-xs text-[#17150F]">Predictive Win Scoring & Forensics</h4>
+                  <p class="text-xs text-[#5C5645] font-body">Dynamic telemetry evaluating deal stage, stakeholder velocity, and health factors.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-3">
+                <div class="w-7 h-7 rounded-lg bg-[#A9772D]/10 border border-[#A9772D]/25 text-[#A9772D] flex items-center justify-center shrink-0 mt-0.5">
+                  <mat-icon class="text-sm">smart_toy</mat-icon>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-xs text-[#17150F]">Autonomous Sequence Copilot</h4>
+                  <p class="text-xs text-[#5C5645] font-body">Generates tailored executive briefings, stakeholder matrix maps, and targeted outreach.</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-3">
+                <div class="w-7 h-7 rounded-lg bg-[#17150F]/10 border border-[#17150F]/25 text-[#17150F] flex items-center justify-center shrink-0 mt-0.5">
+                  <mat-icon class="text-sm">lock</mat-icon>
+                </div>
+                <div>
+                  <h4 class="font-display font-bold text-xs text-[#17150F]">Enterprise Governance & Isolation</h4>
+                  <p class="text-xs text-[#5C5645] font-body">Zero-retention AI processing with role-based tenant access control and AES-256 GCM encryption.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Compliance Badges -->
+            <div class="pt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center font-mono">
+              <div class="p-2 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] shadow-2xs">
+                <div class="text-[9px] text-[#8C8672] uppercase">Encryption</div>
+                <div class="text-[11px] font-bold text-[#17150F]">AES-256 GCM</div>
+              </div>
+              <div class="p-2 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] shadow-2xs">
+                <div class="text-[9px] text-[#8C8672] uppercase">Compliance</div>
+                <div class="text-[11px] font-bold text-[#0B6B53]">SOC2 Type II</div>
+              </div>
+              <div class="p-2 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] shadow-2xs">
+                <div class="text-[9px] text-[#8C8672] uppercase">Multi-Tenant</div>
+                <div class="text-[11px] font-bold text-[#17150F]">RBAC Isolated</div>
+              </div>
+              <div class="p-2 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] shadow-2xs">
+                <div class="text-[9px] text-[#8C8672] uppercase">Telemetry</div>
+                <div class="text-[11px] font-bold text-[#A9772D]">TLS 1.3 Active</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Authentication Card (Sign In / Sign Up / Recovery) (6 Cols on desktop) -->
+          <div class="lg:col-span-6">
+            <div class="bg-[#FFFFFF] border border-[#EAE4D4] rounded-2xl p-6 sm:p-8 shadow-xl space-y-6 transition-all">
+              
+              <!-- Tab Switcher: Sign In / Create Account -->
+              <div class="flex items-center justify-between border-b border-[#EAE4D4] pb-4">
+                <div class="flex items-center space-x-1.5 bg-[#F6F3EC] p-1 rounded-xl border border-[#EAE4D4]">
+                  <button 
+                    type="button" 
+                    id="btn-switch-signin"
+                    (click)="switchAuthMode('signin')"
+                    [class.bg-[#17150F]]="authMode() === 'signin'"
+                    [class.text-[#FFFFFF]]="authMode() === 'signin'"
+                    [class.font-bold]="authMode() === 'signin'"
+                    [class.text-[#5C5645]]="authMode() !== 'signin'"
+                    class="px-4 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer">
+                    Sign In
+                  </button>
+                  <button 
+                    type="button" 
+                    id="btn-switch-signup"
+                    (click)="switchAuthMode('signup')"
+                    [class.bg-[#17150F]]="authMode() === 'signup'"
+                    [class.text-[#FFFFFF]]="authMode() === 'signup'"
+                    [class.font-bold]="authMode() === 'signup'"
+                    [class.text-[#5C5645]]="authMode() !== 'signup'"
+                    class="px-4 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer">
+                    Create Account
+                  </button>
+                </div>
+
+                @if (authMode() === 'forgot_password') {
+                  <span class="text-xs font-mono font-bold text-[#A9772D] px-2 py-1 rounded bg-[#A9772D]/10">
+                    Account Recovery
+                  </span>
+                }
+              </div>
+
+              <!-- Alerts: Error or Success Message -->
+              @if (authError()) {
+                <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono flex items-center space-x-2.5 animate-in fade-in">
+                  <mat-icon class="text-rose-600 text-base shrink-0">error</mat-icon>
+                  <div class="flex-1 font-medium">{{ authError() }}</div>
+                  <button type="button" (click)="authError.set(null)" class="text-rose-500 hover:text-rose-800 p-1 cursor-pointer">
+                    <mat-icon class="text-sm">close</mat-icon>
+                  </button>
+                </div>
+              }
+
+              @if (authSuccessMessage()) {
+                <div class="p-3.5 rounded-xl bg-[#0B6B53]/10 border border-[#0B6B53]/30 text-[#0B6B53] text-xs font-mono flex items-center space-x-2.5 animate-in fade-in">
+                  <mat-icon class="text-[#0B6B53] text-base shrink-0">check_circle</mat-icon>
+                  <div class="flex-1 font-medium">{{ authSuccessMessage() }}</div>
+                  <button type="button" (click)="authSuccessMessage.set(null)" class="text-[#0B6B53]/70 hover:text-[#0B6B53] p-1 cursor-pointer">
+                    <mat-icon class="text-sm">close</mat-icon>
+                  </button>
+                </div>
+              }
+
+              <!-- MODE 1: SIGN IN FORM (NO DUMMY ACCOUNTS) -->
+              @if (authMode() === 'signin') {
+                <form (ngSubmit)="handleSignIn($event)" class="space-y-4">
+                  <div>
+                    <h3 class="font-display font-bold text-xl text-[#17150F]">Sign in to your account</h3>
+                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Enter your corporate credentials to unlock your CRM workspace.</p>
+                  </div>
+
+                  <!-- Fast SSO Buttons -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <button 
+                      type="button"
+                      (click)="loginWithGoogleSSO()"
+                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
+                      <mat-icon class="text-base text-[#A9772D]">verified_user</mat-icon>
+                      <span class="truncate">Google SSO</span>
+                    </button>
+                    <button 
+                      type="button"
+                      (click)="handleSocialSignIn('Microsoft Azure AD')"
+                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
+                      <mat-icon class="text-base text-[#0B6B53]">corporate_fare</mat-icon>
+                      <span class="truncate">Azure AD / Okta</span>
+                    </button>
+                  </div>
+
+                  <div class="flex items-center space-x-3 py-1">
+                    <div class="flex-1 border-t border-[#EAE4D4]"></div>
+                    <span class="text-[10px] font-mono text-[#8C8672] uppercase tracking-wider">or email credentials</span>
+                    <div class="flex-1 border-t border-[#EAE4D4]"></div>
+                  </div>
+
+                  <!-- Email Input (Clean, empty by default) -->
+                  <div class="space-y-1">
+                    <label for="signin-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                      Corporate Email *
+                    </label>
+                    <div class="relative">
+                      <input 
+                        id="signin-email-input"
+                        type="email"
+                        [formControl]="signInEmail"
+                        placeholder="you@company.com"
+                        autocomplete="email"
+                        class="w-full px-3.5 py-2.5 pl-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
+                      <mat-icon class="absolute left-3 top-2.5 text-[#8C8672] text-base">alternate_email</mat-icon>
+                    </div>
+                  </div>
+
+                  <!-- Password Input (Clean, empty by default) -->
+                  <div class="space-y-1">
+                    <div class="flex items-center justify-between">
+                      <label for="signin-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Password *
+                      </label>
+                      <button 
+                        type="button" 
+                        (click)="switchAuthMode('forgot_password')" 
+                        class="text-[11px] font-mono text-[#A9772D] hover:underline cursor-pointer">
+                        Forgot Password?
+                      </button>
+                    </div>
+                    <div class="relative">
+                      <input 
+                        id="signin-password-input"
+                        [type]="showPassword() ? 'text' : 'password'"
+                        [formControl]="signInPassword"
+                        placeholder="••••••••••••"
+                        autocomplete="current-password"
+                        class="w-full px-3.5 py-2.5 pl-10 pr-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
+                      <mat-icon class="absolute left-3 top-2.5 text-[#8C8672] text-base">lock</mat-icon>
+                      <button 
+                        type="button"
+                        (click)="toggleShowPassword()"
+                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
+                        <mat-icon class="text-base">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Sign In Submit Button -->
+                  <button 
+                    type="submit"
+                    id="btn-submit-signin"
+                    [disabled]="authLoading()"
+                    class="w-full py-3 px-4 bg-[#17150F] hover:bg-[#2b271e] disabled:opacity-50 text-[#F6F3EC] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer mt-1">
+                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
+                      {{ authLoading() ? 'sync' : 'login' }}
+                    </mat-icon>
+                    <span>{{ authLoading() ? 'Authenticating...' : 'Sign In to Workspace' }}</span>
+                  </button>
+
+                  <!-- Switch to Sign Up -->
+                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
+                    Need a new workspace account? 
+                    <button 
+                      type="button" 
+                      id="btn-goto-signup"
+                      (click)="switchAuthMode('signup')"
+                      class="text-[#0B6B53] font-bold hover:underline cursor-pointer ml-1">
+                      Create an account
+                    </button>
+                  </div>
+                </form>
+              }
+
+              <!-- MODE 2: SIGN UP / REGISTRATION FORM -->
+              @if (authMode() === 'signup') {
+                <form (ngSubmit)="handleSignUp($event)" class="space-y-3.5">
+                  <div>
+                    <h3 class="font-display font-bold text-xl text-[#17150F]">Create your account</h3>
+                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Register your profile to unlock the full Sales Pilot AI platform.</p>
+                  </div>
+
+                  <!-- Full Name & Work Email Grid -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label for="signup-name-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Full Name *
+                      </label>
+                      <input 
+                        id="signup-name-input"
+                        type="text"
+                        [formControl]="signUpFullName"
+                        placeholder="e.g. Eleanor Vance"
+                        autocomplete="name"
+                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                    </div>
+
+                    <div class="space-y-1">
+                      <label for="signup-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Corporate Email *
+                      </label>
+                      <input 
+                        id="signup-email-input"
+                        type="email"
+                        [formControl]="signUpWorkEmail"
+                        placeholder="eleanor@acme.com"
+                        autocomplete="email"
+                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                    </div>
+                  </div>
+
+                  <!-- Company & Role Grid -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label for="signup-company-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Company Name *
+                      </label>
+                      <input 
+                        id="signup-company-input"
+                        type="text"
+                        [formControl]="signUpCompany"
+                        placeholder="e.g. Acme Corporation"
+                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                    </div>
+
+                    <div class="space-y-1">
+                      <label for="signup-role-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Role / Title *
+                      </label>
+                      <input 
+                        id="signup-role-input"
+                        type="text"
+                        [formControl]="signUpRole"
+                        placeholder="e.g. VP of Sales"
+                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                    </div>
+                  </div>
+
+                  <!-- Passwords Grid -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label for="signup-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Password *
+                      </label>
+                      <div class="relative">
+                        <input 
+                          id="signup-password-input"
+                          [type]="showPassword() ? 'text' : 'password'"
+                          [formControl]="signUpPassword"
+                          placeholder="••••••••••••"
+                          autocomplete="new-password"
+                          class="w-full px-3.5 py-2.5 pr-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                        <button 
+                          type="button"
+                          (click)="toggleShowPassword()"
+                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
+                          <mat-icon class="text-base">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="space-y-1">
+                      <label for="signup-confirm-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                        Confirm Password *
+                      </label>
+                      <div class="relative">
+                        <input 
+                          id="signup-confirm-password-input"
+                          [type]="showConfirmPassword() ? 'text' : 'password'"
+                          [formControl]="signUpConfirmPassword"
+                          placeholder="••••••••••••"
+                          autocomplete="new-password"
+                          class="w-full px-3.5 py-2.5 pr-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#0B6B53]/50 focus:border-[#0B6B53] transition-all">
+                        <button 
+                          type="button"
+                          (click)="toggleShowConfirmPassword()"
+                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
+                          <mat-icon class="text-base">{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Service Agreement Checkbox -->
+                  <div class="pt-1">
+                    <label class="flex items-start space-x-2.5 cursor-pointer text-[11px] font-mono text-[#5C5645]">
+                      <input 
+                        type="checkbox"
+                        [checked]="signUpAgreeTerms()"
+                        (change)="toggleSignUpAgreeTerms()"
+                        class="w-4 h-4 rounded border-[#D8D2C2] text-[#0B6B53] focus:ring-[#0B6B53] mt-0.5 cursor-pointer">
+                      <span>
+                        I agree to the Sales Pilot AI Terms of Service and SOC2 Type II data privacy governance.
+                      </span>
+                    </label>
+                  </div>
+
+                  <!-- Sign Up Submit Button -->
+                  <button 
+                    type="submit"
+                    id="btn-submit-signup"
+                    [disabled]="authLoading()"
+                    class="w-full py-3 px-4 bg-[#0B6B53] hover:bg-[#08523f] disabled:opacity-50 text-[#FFFFFF] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer mt-2">
+                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
+                      {{ authLoading() ? 'sync' : 'how_to_reg' }}
+                    </mat-icon>
+                    <span>{{ authLoading() ? 'Provisioning Account...' : 'Create Account & Enter Platform' }}</span>
+                  </button>
+
+                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
+                    Already have an account? 
+                    <button 
+                      type="button" 
+                      id="btn-goto-signin"
+                      (click)="switchAuthMode('signin')"
+                      class="text-[#A9772D] font-bold hover:underline cursor-pointer ml-1">
+                      Sign in here
+                    </button>
+                  </div>
+                </form>
+              }
+
+              <!-- MODE 3: FORGOT PASSWORD RECOVERY -->
+              @if (authMode() === 'forgot_password') {
+                <form (ngSubmit)="handleForgotPassword($event)" class="space-y-4">
+                  <div>
+                    <h3 class="font-display font-bold text-xl text-[#17150F]">Account Recovery</h3>
+                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Enter your work email address to receive password reset instructions.</p>
+                  </div>
+
+                  <div class="space-y-1">
+                    <label for="recovery-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
+                      Work Email Address *
+                    </label>
+                    <div class="relative">
+                      <input 
+                        id="recovery-email-input"
+                        type="email"
+                        [formControl]="forgotPasswordEmail"
+                        placeholder="you@company.com"
+                        class="w-full px-3.5 py-2.5 pl-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
+                      <mat-icon class="absolute left-3 top-2.5 text-[#8C8672] text-base">alternate_email</mat-icon>
+                    </div>
+                  </div>
+
+                  <div class="p-3 rounded-xl bg-[#F6F3EC] border border-[#EAE4D4] text-[11px] font-mono text-[#5C5645]">
+                    Reset links expire within 15 minutes and require domain authorization.
+                  </div>
+
+                  <button 
+                    type="submit"
+                    id="btn-submit-recovery"
+                    [disabled]="authLoading()"
+                    class="w-full py-3 px-4 bg-[#A9772D] hover:bg-[#936624] disabled:opacity-50 text-[#FFFFFF] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
+                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
+                      {{ authLoading() ? 'sync' : 'forward_to_inbox' }}
+                    </mat-icon>
+                    <span>{{ authLoading() ? 'Dispatching Link...' : 'Send Password Reset Link' }}</span>
+                  </button>
+
+                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
+                    Remembered your password? 
+                    <button 
+                      type="button" 
+                      (click)="switchAuthMode('signin')"
+                      class="text-[#17150F] font-bold hover:underline cursor-pointer ml-1">
+                      Return to Sign In
+                    </button>
+                  </div>
+                </form>
+              }
+
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <!-- Footer Ribbon -->
+      <footer class="w-full border-t border-[#EAE4D4] bg-[#FFFFFF]/60 px-6 sm:px-10 py-3 flex flex-col sm:flex-row items-center justify-between text-[11px] font-mono text-[#8C8672] shrink-0 z-10 gap-2">
+        <div>Sales Pilot AI v4.2 • Enterprise Revenue Science Platform</div>
+        <div class="flex items-center space-x-4">
+          <span>SOC2 Type II</span>
+          <span>•</span>
+          <span>AES-256 GCM</span>
+          <span>•</span>
+          <span>Zero Data Retention</span>
+        </div>
+      </footer>
+
+    </div>
+  } @else {
+
   <!-- TOP STATIC LIVE SIGNAL TICKER (Full-width spanning the very top of the app) -->
   <section id="live-ticker-strip" class="w-full bg-[#EDE8DC] border-b border-[#EAE4D4] h-10 flex items-center px-3 sm:px-4 overflow-hidden select-none z-40 shrink-0 justify-between">
     
@@ -334,38 +826,6 @@
               <div class="text-[10px] text-[#8C8672] font-mono mt-0.5 truncate">Scikit-Pulse & Weights</div>
             </div>
           </button>
-
-          <!-- 8. Sign In / Sign Up Access Portal Tab -->
-          <button 
-            type="button"
-            id="nav-rail-auth"
-            (click)="openAuthPage('signin')"
-            [class.bg-[#A9772D]/12]="activeTab() === 'auth'"
-            [class.text-[#A9772D]]="activeTab() === 'auth'"
-            [class.text-[#17150F]]="activeTab() !== 'auth'"
-            [class.hover:bg-[#F6F3EC]]="activeTab() !== 'auth'"
-            class="relative w-full h-11 flex items-center px-2 lg:px-2.5 rounded-xl transition-all cursor-pointer text-left group justify-center lg:justify-start"
-            title="Sign In / Sign Up Portal">
-            @if (activeTab() === 'auth') {
-              <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#A9772D] rounded-r-full"></span>
-            }
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mr-0 lg:mr-2.5"
-              [class.bg-[#A9772D]/15]="activeTab() === 'auth'"
-              [class.bg-[#F6F3EC]]="activeTab() !== 'auth'">
-              <mat-icon class="text-lg">lock</mat-icon>
-            </div>
-            <div class="flex-1 min-w-0 hidden lg:block">
-              <div class="font-display font-bold text-xs leading-none flex items-center justify-between">
-                <span class="truncate">Sign In / Sign Up</span>
-                @if (isAuthenticated()) {
-                  <span class="px-1 py-0.2 rounded bg-[#0B6B53]/15 text-[#0B6B53] text-[9px] font-mono font-bold shrink-0">AUTH</span>
-                } @else {
-                  <span class="px-1 py-0.2 rounded bg-[#A9772D]/20 text-[#A9772D] text-[9px] font-mono font-bold shrink-0">LOGIN</span>
-                }
-              </div>
-              <div class="text-[10px] text-[#8C8672] font-mono mt-0.5 truncate">SSO & User Onboarding</div>
-            </div>
-          </button>
         </div>
 
       </div>
@@ -395,7 +855,7 @@
             class="flex items-center space-x-0 lg:space-x-2.5 min-w-0 flex-1 text-left cursor-pointer bg-transparent border-0 p-0 justify-center lg:justify-start"
             title="Open Profile">
             <div class="w-8 h-8 rounded-lg bg-[#17150F] text-[#F6F3EC] font-bold text-xs flex items-center justify-center shrink-0">
-              AM
+              {{ userInitials() }}
             </div>
             <div class="flex-1 min-w-0 hidden lg:block">
               <div class="font-display font-bold text-xs text-[#17150F] truncate">{{ userProfile().name }}</div>
@@ -720,7 +1180,7 @@
             class="flex items-center space-x-2 p-1.5 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#EAE4D4] rounded-xl text-xs font-mono transition-all shadow-2xs cursor-pointer"
             title="Open Executive Profile ({{ userProfile().name }})">
             <div class="w-7 h-7 rounded-lg bg-[#17150F] text-[#F6F3EC] font-bold text-xs flex items-center justify-center">
-              {{ userProfile().name.slice(0, 2).toUpperCase() }}
+              {{ userInitials() }}
             </div>
             <span class="hidden md:inline font-semibold text-[#17150F] text-xs pr-1">{{ userProfile().name.split(' ')[0] }}</span>
           </button>
@@ -5525,570 +5985,6 @@
         </section>
       }
 
-      <!-- ======================================================================= -->
-      <!-- TAB 9: ENTERPRISE AUTHENTICATION (SIGN IN / SIGN UP / RECOVERY)         -->
-      <!-- ======================================================================= -->
-      @if (activeTab() === 'auth') {
-        <section id="auth-portal-section" class="space-y-6 max-w-5xl mx-auto py-2 animate-in fade-in duration-200">
-          
-          <!-- Top Breadcrumb & Status Ribbon -->
-          <div class="bento-card rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div class="space-y-1">
-              <div class="flex items-center space-x-2">
-                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#A9772D]/15 text-[#A9772D] border border-[#A9772D]/30 uppercase flex items-center gap-1">
-                  <mat-icon class="text-xs">lock</mat-icon>
-                  <span>ENTERPRISE IDENTITY & RBAC GATEWAY</span>
-                </span>
-                <span class="text-[#EAE4D4]">•</span>
-                <span class="font-mono text-[11px] text-[#8C8672]">
-                  Status: 
-                  @if (isAuthenticated()) {
-                    <strong class="text-[#0B6B53]">Authenticated (Active Session)</strong>
-                  } @else {
-                    <strong class="text-[#A9772D]">Signed Out (Authentication Required)</strong>
-                  }
-                </span>
-              </div>
-              <h2 class="font-display font-bold text-2xl text-[#17150F]">
-                @if (authMode() === 'signin') {
-                  Sign In to Sales Pilot AI
-                } @else if (authMode() === 'signup') {
-                  Create Enterprise Workspace Account
-                } @else {
-                  Account Recovery & Password Reset
-                }
-              </h2>
-              <p class="text-xs text-[#5C5645] font-body">
-                Access your real-time revenue command deck, MEDDPICC forensics scorecards, and Gemini Copilot.
-              </p>
-            </div>
-
-            <!-- Mode Switcher Tabs -->
-            <div class="flex items-center space-x-1.5 bg-[#F6F3EC] p-1 rounded-xl border border-[#EAE4D4] self-start sm:self-center">
-              <button 
-                type="button"
-                (click)="switchAuthMode('signin')"
-                [class.bg-[#17150F]]="authMode() === 'signin'"
-                [class.text-[#FFFFFF]]="authMode() === 'signin'"
-                [class.font-bold]="authMode() === 'signin'"
-                [class.text-[#5C5645]]="authMode() !== 'signin'"
-                class="px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer hover:text-[#17150F]">
-                Sign In
-              </button>
-              <button 
-                type="button"
-                (click)="switchAuthMode('signup')"
-                [class.bg-[#17150F]]="authMode() === 'signup'"
-                [class.text-[#FFFFFF]]="authMode() === 'signup'"
-                [class.font-bold]="authMode() === 'signup'"
-                [class.text-[#5C5645]]="authMode() !== 'signup'"
-                class="px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer hover:text-[#17150F]">
-                Sign Up
-              </button>
-              <button 
-                type="button"
-                (click)="switchAuthMode('forgot_password')"
-                [class.bg-[#17150F]]="authMode() === 'forgot_password'"
-                [class.text-[#FFFFFF]]="authMode() === 'forgot_password'"
-                [class.font-bold]="authMode() === 'forgot_password'"
-                [class.text-[#5C5645]]="authMode() !== 'forgot_password'"
-                class="px-3 py-1.5 rounded-lg text-xs font-mono transition-all cursor-pointer hover:text-[#17150F]">
-                Recovery
-              </button>
-            </div>
-          </div>
-
-          <!-- Alert Banners: Error or Success Messages -->
-          @if (authError()) {
-            <div class="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono flex items-center space-x-2.5 animate-in fade-in">
-              <mat-icon class="text-rose-600 text-base shrink-0">error</mat-icon>
-              <div class="flex-1 font-medium">{{ authError() }}</div>
-              <button type="button" (click)="authError.set(null)" class="text-rose-500 hover:text-rose-800 p-1 cursor-pointer">
-                <mat-icon class="text-sm">close</mat-icon>
-              </button>
-            </div>
-          }
-
-          @if (authSuccessMessage()) {
-            <div class="p-4 rounded-xl bg-[#0B6B53]/10 border border-[#0B6B53]/30 text-[#0B6B53] text-xs font-mono flex items-center space-x-2.5 animate-in fade-in">
-              <mat-icon class="text-[#0B6B53] text-base shrink-0">check_circle</mat-icon>
-              <div class="flex-1 font-medium">{{ authSuccessMessage() }}</div>
-              <button type="button" (click)="authSuccessMessage.set(null)" class="text-[#0B6B53]/70 hover:text-[#0B6B53] p-1 cursor-pointer">
-                <mat-icon class="text-sm">close</mat-icon>
-              </button>
-            </div>
-          }
-
-          <!-- If Already Authenticated: Show Current Active Session Banner -->
-          @if (isAuthenticated()) {
-            <div class="bento-card rounded-2xl p-5 border border-[#0B6B53]/30 bg-[#0B6B53]/5 space-y-4">
-              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-center space-x-3.5">
-                  <div class="w-12 h-12 rounded-xl bg-[#17150F] text-[#F6F3EC] flex items-center justify-center font-mono font-bold text-base shadow-sm">
-                    {{ userProfile().name.slice(0, 2).toUpperCase() }}
-                  </div>
-                  <div>
-                    <div class="flex items-center space-x-2">
-                      <h3 class="font-display font-bold text-base text-[#17150F]">{{ userProfile().name }}</h3>
-                      <span class="px-2 py-0.5 rounded bg-[#0B6B53]/15 text-[#0B6B53] border border-[#0B6B53]/30 text-[10px] font-mono font-bold">
-                        ACTIVE SESSION
-                      </span>
-                    </div>
-                    <p class="text-xs font-mono text-[#5C5645] mt-0.5">
-                      {{ userProfile().email }} • {{ userProfile().role }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-center space-x-2.5">
-                  <button 
-                    type="button"
-                    (click)="setTab('dashboard')"
-                    class="px-4 py-2 bg-[#17150F] hover:bg-[#2C2921] text-[#F6F3EC] rounded-xl text-xs font-mono font-bold transition-all shadow-xs cursor-pointer flex items-center space-x-1.5">
-                    <mat-icon class="text-xs">dashboard</mat-icon>
-                    <span>Launch Command Deck</span>
-                  </button>
-                  <button 
-                    type="button"
-                    (click)="handleSignOut()"
-                    class="px-4 py-2 bg-[#FFFFFF] hover:bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer flex items-center space-x-1.5">
-                    <mat-icon class="text-xs">logout</mat-icon>
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          }
-
-          <!-- Main Auth Grid (Left Form Card + Right Enterprise Highlights / Demo Accounts) -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            <!-- LEFT FORM CONTAINER (7 COLS) -->
-            <div class="lg:col-span-7 bento-card rounded-2xl p-6 sm:p-7 space-y-6">
-              
-              <!-- 1. SIGN IN FORM -->
-              @if (authMode() === 'signin') {
-                <form (submit)="handleSignIn($event)" class="space-y-5">
-                  <div>
-                    <h3 class="font-display font-bold text-lg text-[#17150F]">Welcome Back</h3>
-                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Enter your enterprise credentials to access your CRM workspace.</p>
-                  </div>
-
-                  <!-- Enterprise SSO Fast Buttons -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    <button 
-                      type="button"
-                      (click)="loginWithGoogleSSO()"
-                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
-                      <mat-icon class="text-base text-[#A9772D]">verified_user</mat-icon>
-                      <span class="truncate">Google SSO</span>
-                    </button>
-                    <button 
-                      type="button"
-                      (click)="handleSocialSignIn('Microsoft Entra / Azure AD')"
-                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
-                      <mat-icon class="text-base text-[#0B6B53]">corporate_fare</mat-icon>
-                      <span class="truncate">Azure AD / Okta</span>
-                    </button>
-                  </div>
-
-                  <div class="flex items-center space-x-3">
-                    <div class="flex-1 border-t border-[#EAE4D4]"></div>
-                    <span class="text-[10px] font-mono text-[#8C8672] uppercase">Or standard login</span>
-                    <div class="flex-1 border-t border-[#EAE4D4]"></div>
-                  </div>
-
-                  <!-- Work Email Field -->
-                  <div class="space-y-1.5">
-                    <label for="signin-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                      Company Work Email
-                    </label>
-                    <div class="relative">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C8672]">
-                        <mat-icon class="text-base">email</mat-icon>
-                      </div>
-                      <input 
-                        id="signin-email-input"
-                        type="email"
-                        [formControl]="signInEmail"
-                        placeholder="alex.morgan@salespilot.ai"
-                        class="w-full pl-9 pr-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
-                    </div>
-                  </div>
-
-                  <!-- Password Field -->
-                  <div class="space-y-1.5">
-                    <div class="flex items-center justify-between">
-                      <label for="signin-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Workspace Password
-                      </label>
-                      <button 
-                        type="button" 
-                        (click)="switchAuthMode('forgot_password')"
-                        class="text-[11px] font-mono text-[#A9772D] hover:underline cursor-pointer">
-                        Forgot password?
-                      </button>
-                    </div>
-                    <div class="relative">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C8672]">
-                        <mat-icon class="text-base">lock</mat-icon>
-                      </div>
-                      <input 
-                        id="signin-password-input"
-                        [type]="showPassword() ? 'text' : 'password'"
-                        [formControl]="signInPassword"
-                        placeholder="••••••••••••"
-                        class="w-full pl-9 pr-10 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
-                      <button 
-                        type="button"
-                        (click)="toggleShowPassword()"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
-                        <mat-icon class="text-base">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Remember Me Checkbox -->
-                  <div class="flex items-center justify-between text-xs font-mono">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                      <input 
-                        type="checkbox"
-                        [checked]="signInRememberMe()"
-                        (change)="toggleSignInRememberMe()"
-                        class="w-4 h-4 rounded border-[#D8D2C2] text-[#A9772D] focus:ring-[#A9772D] cursor-pointer">
-                      <span class="text-[#5C5645]">Remember this browser session (30 days)</span>
-                    </label>
-                  </div>
-
-                  <!-- Sign In Action Button -->
-                  <button 
-                    type="submit"
-                    id="btn-submit-signin"
-                    [disabled]="authLoading()"
-                    class="w-full py-3 px-4 bg-[#17150F] hover:bg-[#2C2921] disabled:opacity-50 text-[#F6F3EC] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
-                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
-                      {{ authLoading() ? 'sync' : 'login' }}
-                    </mat-icon>
-                    <span>{{ authLoading() ? 'Authenticating Credentials...' : 'Sign In to Workspace' }}</span>
-                  </button>
-
-                  <!-- Guest Exploration Button -->
-                  <button 
-                    type="button"
-                    id="btn-explore-guest"
-                    (click)="exploreAsGuest()"
-                    class="w-full py-2.5 px-4 bg-[#F6F3EC] hover:bg-[#EAE4D4] text-[#5C5645] hover:text-[#17150F] border border-[#D8D2C2] rounded-xl text-xs font-mono font-semibold transition-all shadow-2xs flex items-center justify-center space-x-2 cursor-pointer">
-                    <mat-icon class="text-sm text-[#A9772D]">visibility</mat-icon>
-                    <span>Explore Dashboard in Demo Guest Mode</span>
-                  </button>
-
-                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
-                    Need a new workspace account? 
-                    <button 
-                      type="button"
-                      (click)="switchAuthMode('signup')"
-                      class="text-[#A9772D] font-bold hover:underline cursor-pointer">
-                      Create Account
-                    </button>
-                  </div>
-                </form>
-              }
-
-              <!-- 2. SIGN UP FORM -->
-              @if (authMode() === 'signup') {
-                <form (submit)="handleSignUp($event)" class="space-y-4">
-                  <div>
-                    <h3 class="font-display font-bold text-lg text-[#17150F]">Create Enterprise Account</h3>
-                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Provision an executive CRM workspace seat with AI Copilot privileges.</p>
-                  </div>
-
-                  <!-- Full Name & Work Email in 2 Cols -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="space-y-1.5">
-                      <label for="signup-name-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Full Name *
-                      </label>
-                      <input 
-                        id="signup-name-input"
-                        type="text"
-                        [formControl]="signUpFullName"
-                        placeholder="e.g. Jordan Hayes"
-                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                    </div>
-
-                    <div class="space-y-1.5">
-                      <label for="signup-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Company Work Email *
-                      </label>
-                      <input 
-                        id="signup-email-input"
-                        type="email"
-                        [formControl]="signUpWorkEmail"
-                        placeholder="jordan@company.com"
-                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                    </div>
-                  </div>
-
-                  <!-- Company & Role Selection in 2 Cols -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="space-y-1.5">
-                      <label for="signup-company-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Company / Organization *
-                      </label>
-                      <input 
-                        id="signup-company-input"
-                        type="text"
-                        [formControl]="signUpCompany"
-                        placeholder="e.g. Acme Corp Technologies"
-                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                    </div>
-
-                    <div class="space-y-1.5">
-                      <label for="signup-role-select" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Sales Role & Scope
-                      </label>
-                      <select 
-                        id="signup-role-select"
-                        [formControl]="signUpRole"
-                        class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                        <option value="Chief Revenue Officer">Chief Revenue Officer (CRO)</option>
-                        <option value="Director of Strategic Enterprise">Director of Strategic Enterprise</option>
-                        <option value="Principal Enterprise Account Executive">Principal Enterprise AE</option>
-                        <option value="Senior Sales Strategist">Senior Sales Strategist</option>
-                        <option value="Revenue Operations Leader">Revenue Operations (RevOps)</option>
-                        <option value="Sales Development Leader">Sales Development (SDR Leader)</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <!-- Territory Field -->
-                  <div class="space-y-1.5">
-                    <label for="signup-territory-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                      Territory / Geographic Coverage
-                    </label>
-                    <input 
-                      id="signup-territory-input"
-                      type="text"
-                      [formControl]="signUpTerritory"
-                      placeholder="e.g. North America Enterprise Tier-1"
-                      class="w-full px-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                  </div>
-
-                  <!-- Password & Confirm Password in 2 Cols -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="space-y-1.5">
-                      <label for="signup-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Create Password (min 8 chars) *
-                      </label>
-                      <div class="relative">
-                        <input 
-                          id="signup-password-input"
-                          [type]="showPassword() ? 'text' : 'password'"
-                          [formControl]="signUpPassword"
-                          placeholder="••••••••••••"
-                          class="w-full px-3.5 py-2.5 pr-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                        <button 
-                          type="button"
-                          (click)="toggleShowPassword()"
-                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
-                          <mat-icon class="text-base">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-
-                    <div class="space-y-1.5">
-                      <label for="signup-confirm-password-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                        Confirm Password *
-                      </label>
-                      <div class="relative">
-                        <input 
-                          id="signup-confirm-password-input"
-                          [type]="showConfirmPassword() ? 'text' : 'password'"
-                          [formControl]="signUpConfirmPassword"
-                          placeholder="••••••••••••"
-                          class="w-full px-3.5 py-2.5 pr-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                        <button 
-                          type="button"
-                          (click)="toggleShowConfirmPassword()"
-                          class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
-                          <mat-icon class="text-base">{{ showConfirmPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Agreement Checkbox -->
-                  <div class="pt-1">
-                    <label class="flex items-start space-x-2.5 cursor-pointer text-xs font-mono text-[#5C5645]">
-                      <input 
-                        type="checkbox"
-                        [checked]="signUpAgreeTerms()"
-                        (change)="toggleSignUpAgreeTerms()"
-                        class="w-4 h-4 rounded border-[#D8D2C2] text-[#0B6B53] focus:ring-[#0B6B53] mt-0.5 cursor-pointer">
-                      <span>
-                        I accept the Sales Pilot AI Enterprise Service Agreement, SOC2 Type II Data Governance protocols, and privacy terms.
-                      </span>
-                    </label>
-                  </div>
-
-                  <!-- Sign Up Submit Button -->
-                  <button 
-                    type="submit"
-                    id="btn-submit-signup"
-                    [disabled]="authLoading()"
-                    class="w-full py-3 px-4 bg-[#0B6B53] hover:bg-[#08523f] disabled:opacity-50 text-[#FFFFFF] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer mt-2">
-                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
-                      {{ authLoading() ? 'sync' : 'how_to_reg' }}
-                    </mat-icon>
-                    <span>{{ authLoading() ? 'Provisioning Workspace...' : 'Create Account & Access CRM' }}</span>
-                  </button>
-
-                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
-                    Already have an enterprise account? 
-                    <button 
-                      type="button"
-                      (click)="switchAuthMode('signin')"
-                      class="text-[#A9772D] font-bold hover:underline cursor-pointer">
-                      Sign In here
-                    </button>
-                  </div>
-                </form>
-              }
-
-              <!-- 3. FORGOT PASSWORD / RECOVERY FORM -->
-              @if (authMode() === 'forgot_password') {
-                <form (submit)="handleForgotPassword($event)" class="space-y-5">
-                  <div>
-                    <h3 class="font-display font-bold text-lg text-[#17150F]">Reset Workspace Password</h3>
-                    <p class="text-xs text-[#8C8672] font-mono mt-0.5">Enter your account email to receive a secure time-bounded reset token.</p>
-                  </div>
-
-                  <div class="space-y-1.5">
-                    <label for="recovery-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                      Account Email Address
-                    </label>
-                    <div class="relative">
-                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#8C8672]">
-                        <mat-icon class="text-base">mail_lock</mat-icon>
-                      </div>
-                      <input 
-                        id="recovery-email-input"
-                        type="email"
-                        [formControl]="forgotPasswordEmail"
-                        placeholder="alex.morgan@salespilot.ai"
-                        class="w-full pl-9 pr-3.5 py-2.5 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D]">
-                    </div>
-                  </div>
-
-                  <div class="p-3.5 rounded-xl bg-[#F6F3EC] border border-[#EAE4D4] text-[11px] font-mono text-[#5C5645] leading-relaxed">
-                    <strong class="text-[#17150F]">Security Protocol:</strong> Password reset requests expire within 15 minutes and require authorization through your enterprise SSO domain or two-factor authenticator.
-                  </div>
-
-                  <button 
-                    type="submit"
-                    id="btn-submit-recovery"
-                    [disabled]="authLoading()"
-                    class="w-full py-3 px-4 bg-[#A9772D] hover:bg-[#936624] disabled:opacity-50 text-[#FFFFFF] rounded-xl text-xs font-mono font-bold transition-all shadow-sm flex items-center justify-center space-x-2 cursor-pointer">
-                    <mat-icon [class.animate-spin]="authLoading()" class="text-sm">
-                      {{ authLoading() ? 'sync' : 'forward_to_inbox' }}
-                    </mat-icon>
-                    <span>{{ authLoading() ? 'Sending Recovery Link...' : 'Dispatch Password Reset Link' }}</span>
-                  </button>
-
-                  <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
-                    Remembered your credentials? 
-                    <button 
-                      type="button"
-                      (click)="switchAuthMode('signin')"
-                      class="text-[#A9772D] font-bold hover:underline cursor-pointer">
-                      Return to Sign In
-                    </button>
-                  </div>
-                </form>
-              }
-
-            </div>
-
-            <!-- RIGHT CONTAINER: FAST 1-CLICK DEMO ACCOUNTS & SECURITY VAULT (5 COLS) -->
-            <div class="lg:col-span-5 space-y-5">
-              
-              <!-- 1-Click Fast Enterprise Evaluation Presets -->
-              <div class="bento-card rounded-2xl p-5 space-y-4">
-                <div class="flex items-center justify-between border-b border-[#EAE4D4] pb-3">
-                  <div class="flex items-center space-x-2">
-                    <mat-icon class="text-[#A9772D] text-base">badge</mat-icon>
-                    <h4 class="font-display font-bold text-sm text-[#17150F]">1-Click Demo Profiles</h4>
-                  </div>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-[#A9772D]/10 text-[#A9772D] font-bold">
-                    INSTANT PREVIEW
-                  </span>
-                </div>
-                <p class="text-xs font-body text-[#5C5645]">
-                  Select an enterprise persona to authenticate instantly and test role-based pipeline views:
-                </p>
-
-                <div class="space-y-2.5">
-                  @for (demo of demoAccounts(); track demo.id) {
-                    <button 
-                      type="button"
-                      (click)="loginAsDemoAccount(demo)"
-                      class="w-full p-3 rounded-xl border border-[#EAE4D4] bg-[#FFFFFF] hover:bg-[#F6F3EC] text-left transition-all cursor-pointer shadow-2xs group flex items-center justify-between">
-                      <div class="flex items-center space-x-3">
-                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-[#FFFFFF] font-mono font-bold text-xs shrink-0 shadow-2xs"
-                          [style.background-color]="demo.color">
-                          {{ demo.initials }}
-                        </div>
-                        <div class="min-w-0">
-                          <div class="font-display font-bold text-xs text-[#17150F] group-hover:text-[#A9772D] transition-colors truncate">
-                            {{ demo.name }}
-                          </div>
-                          <div class="text-[10px] font-mono text-[#8C8672] truncate">
-                            {{ demo.role }}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="text-right shrink-0 font-mono text-[10px] pl-2">
-                        <div class="font-bold text-[#0B6B53]">{{ demo.attainment }}% Attainment</div>
-                        <div class="text-[#8C8672]">{{ demo.quota }} Quota</div>
-                      </div>
-                    </button>
-                  }
-                </div>
-              </div>
-
-              <!-- Enterprise Governance & Data Architecture Badge Card -->
-              <div class="bento-card rounded-2xl p-5 space-y-3.5 bg-[#F6F3EC]/50">
-                <div class="flex items-center space-x-2 text-[#0B6B53]">
-                  <mat-icon class="text-base">verified</mat-icon>
-                  <h4 class="font-display font-bold text-xs text-[#17150F] uppercase tracking-wider">Enterprise Security Compliance</h4>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-                  <div class="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] space-y-0.5">
-                    <div class="text-[10px] text-[#8C8672]">ENCRYPTION</div>
-                    <div class="font-bold text-[#17150F] text-[11px]">AES-256 GCM</div>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] space-y-0.5">
-                    <div class="text-[10px] text-[#8C8672]">SOC2 AUDIT</div>
-                    <div class="font-bold text-[#0B6B53] text-[11px]">Type II Certified</div>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] space-y-0.5">
-                    <div class="text-[10px] text-[#8C8672]">DATA RESIDENCY</div>
-                    <div class="font-bold text-[#17150F] text-[11px]">US / EU Isolated</div>
-                  </div>
-                  <div class="p-2.5 rounded-xl bg-[#FFFFFF] border border-[#EAE4D4] space-y-0.5">
-                    <div class="text-[10px] text-[#8C8672]">AI GROUNDING</div>
-                    <div class="font-bold text-[#A9772D] text-[11px]">Zero Data Retention</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </section>
-      }
     </main>
   </div>
 </div>
@@ -7657,20 +7553,10 @@
 
           <button 
             type="button"
-            (click)="openAuthPage('signin'); toggleMobileMenu()"
-            [class.bg-[#F6F3EC]]="activeTab() === 'auth'"
-            [class.text-[#A9772D]]="activeTab() === 'auth'"
-            [class.text-[#17150F]]="activeTab() !== 'auth'"
-            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-colors cursor-pointer">
-            <mat-icon class="text-lg">lock</mat-icon>
-            <div class="flex items-center space-x-1.5">
-              <span>Sign In / Sign Up</span>
-              @if (isAuthenticated()) {
-                <span class="px-1 py-0.2 rounded bg-[#0B6B53]/15 text-[#0B6B53] text-[9px] font-mono font-bold">AUTH</span>
-              } @else {
-                <span class="px-1 py-0.2 rounded bg-[#A9772D]/20 text-[#A9772D] text-[9px] font-mono font-bold">LOGIN</span>
-              }
-            </div>
+            (click)="handleSignOut(); toggleMobileMenu()"
+            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer">
+            <mat-icon class="text-lg text-rose-600">logout</mat-icon>
+            <span class="font-medium">Sign Out ({{ userProfile().name }})</span>
           </button>
         </nav>
       </div>
@@ -8563,5 +8449,7 @@
       <span class="text-[9px] font-mono font-medium">Copilot</span>
     </button>
   </div>
+
+  } <!-- Closes @else for isAuthenticated() -->
 
 </div>

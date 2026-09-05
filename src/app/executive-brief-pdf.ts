@@ -6,7 +6,7 @@ export function generateExecutiveBriefPdf(
   lead: Lead,
   formattedDealArr: string,
   currency: CurrencyInfo,
-  userProfileName = 'Alex Morgan'
+  userProfileName = 'Enterprise Director'
 ): void {
   const doc = new jsPDF({
     orientation: 'portrait',

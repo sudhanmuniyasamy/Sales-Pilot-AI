@@ -362,10 +362,20 @@ export class App implements OnInit, OnDestroy {
   readonly showPassword = signal<boolean>(false);
   readonly showConfirmPassword = signal<boolean>(false);
 
-  // Sign In Form Controls
-  readonly signInEmail = new FormControl('alex.morgan@salespilot.ai', { nonNullable: true });
-  readonly signInPassword = new FormControl('Enterprise2026!#', { nonNullable: true });
-  readonly signInRememberMe = signal<boolean>(true);
+  // Sign In Form Controls (Empty by default — no dummy accounts)
+  readonly signInEmail = new FormControl('', { nonNullable: true });
+  readonly signInPassword = new FormControl('', { nonNullable: true });
+  readonly signInRememberMe = signal<boolean>(false);
+
+  readonly userInitials = computed<string>(() => {
+    const name = this.userProfile().name.trim();
+    if (!name) return 'U';
+    const parts = name.split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
+  });
 
   // Sign Up Form Controls
   readonly signUpFullName = new FormControl('', { nonNullable: true });
@@ -601,11 +611,11 @@ export class App implements OnInit, OnDestroy {
   readonly pipelineGraphType = signal<'area' | 'bar' | 'cumulative' | 'waterfall'>('area');
   readonly pipelineChartMetric = signal<'arr' | 'winRate' | 'velocity' | 'deals'>('arr');
 
-  // Executive Profile & User State
+  // Executive Profile & User State (Populated on login/registration)
   readonly userProfile = signal({
-    name: 'Alex Morgan',
-    title: 'Director of Strategic Enterprise',
-    email: 'alex.morgan@salespilot.ai',
+    name: '',
+    title: 'Enterprise Member',
+    email: '',
     phone: '+1 (415) 890-4100',
     location: 'San Francisco, CA (HQ)',
     timezone: 'Pacific Time (PT - America/Los_Angeles)',
@@ -2459,7 +2469,7 @@ export class App implements OnInit, OnDestroy {
         { type: 'action', title: 'Open New Deal Ingestion Modal', subtitle: 'Quickly register enterprise prospect', icon: 'add_circle', action: 'NEW_LEAD' },
         { type: 'action', title: 'Run Live Monte Carlo & Scikit-Pulse Recalibration', subtitle: 'Recalibrate 14,200 closed vectors', icon: 'auto_fix_high', action: 'RECALIBRATE' },
         { type: 'action', title: 'Export Full CRM Pipeline Dataset (JSON)', subtitle: 'Export opportunities & activity telemetry', icon: 'download', action: 'EXPORT_JSON' },
-        { type: 'tab', title: 'Switch to Executive Profile & Workspace', subtitle: 'Alex Morgan quota attainment & preferences', icon: 'account_circle', action: 'GOTO_PROFILE' },
+        { type: 'tab', title: 'Switch to Executive Profile & Workspace', subtitle: 'Executive quota attainment & preferences', icon: 'account_circle', action: 'GOTO_PROFILE' },
         { type: 'tab', title: 'Switch to Pipeline Matrix (Kanban)', subtitle: 'View interactive stages and deal cards', icon: 'view_kanban', action: 'GOTO_LEADS' },
         { type: 'tab', title: 'Switch to Revenue Forecaster & Scenarios', subtitle: 'What-if parameter modeling', icon: 'trending_up', action: 'GOTO_ANALYTICS' },
         { type: 'tab', title: 'Switch to Model Calibration & Settings', subtitle: 'Scikit-Pulse v4.2 weights and CRM sync', icon: 'tune', action: 'GOTO_SETTINGS' },
@@ -2479,7 +2489,7 @@ export class App implements OnInit, OnDestroy {
 
     const matchedActions = [
       { type: 'action' as const, title: 'Open New Deal Ingestion Modal', subtitle: 'Register enterprise prospect', icon: 'add_circle', action: 'NEW_LEAD' },
-      { type: 'action' as const, title: 'Switch to Executive Profile & Workspace', subtitle: 'Alex Morgan quota attainment & preferences', icon: 'account_circle', action: 'GOTO_PROFILE' },
+      { type: 'action' as const, title: 'Switch to Executive Profile & Workspace', subtitle: 'Executive quota attainment & preferences', icon: 'account_circle', action: 'GOTO_PROFILE' },
       { type: 'action' as const, title: 'Recalibrate AI Conversion Model', subtitle: 'Trigger live weight rebalancing', icon: 'auto_fix_high', action: 'RECALIBRATE' },
       { type: 'action' as const, title: 'Export CRM Database as JSON', subtitle: 'Download comprehensive snapshot', icon: 'download', action: 'EXPORT_JSON' },
     ].filter((a) => a.title.toLowerCase().includes(q) || a.subtitle.toLowerCase().includes(q));
@@ -3270,38 +3280,39 @@ export class App implements OnInit, OnDestroy {
     }
   }
 
-  exploreAsGuest() {
-    this.isAuthenticated.set(true);
-    this.setTab('dashboard');
-    this.showToast('Exploring Sales Pilot AI in Demo Guest Mode.');
-  }
-
-  private saveSession(profile: { name: string; email: string; title: string; role?: string; quotaTarget?: string; attainment?: number; territory?: string }) {
-    if (typeof window !== 'undefined' && window.localStorage) {
+  private saveSession(profile: { name: string; email: string; title: string; role?: string; quotaTarget?: string; attainment?: number; territory?: string; company?: string }) {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
       try {
-        window.localStorage.setItem('salespilot_user_session', JSON.stringify(profile));
+        window.sessionStorage.setItem('salespilot_active_session', JSON.stringify(profile));
       } catch (e) {
-        console.warn('Could not save session to localStorage:', e);
+        console.warn('Could not save session:', e);
       }
     }
   }
 
   private clearSession() {
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (typeof window !== 'undefined') {
       try {
-        window.localStorage.removeItem('salespilot_user_session');
+        if (window.sessionStorage) {
+          window.sessionStorage.removeItem('salespilot_active_session');
+        }
+        if (window.localStorage) {
+          window.localStorage.removeItem('salespilot_remembered_session');
+        }
       } catch (e) {
-        console.warn('Could not clear session from localStorage:', e);
+        console.warn('Could not clear session:', e);
       }
     }
   }
 
   private restoreSession() {
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (typeof window !== 'undefined') {
       try {
-        const stored = window.localStorage.getItem('salespilot_user_session');
-        if (stored) {
-          const parsed = JSON.parse(stored);
+        // Only restore if user has an active session in the current tab/session
+        const sessionStored = window.sessionStorage ? window.sessionStorage.getItem('salespilot_active_session') : null;
+
+        if (sessionStored) {
+          const parsed = JSON.parse(sessionStored);
           if (parsed && parsed.name && parsed.email) {
             this.userProfile.update((p) => ({
               ...p,
@@ -3309,12 +3320,16 @@ export class App implements OnInit, OnDestroy {
             }));
             this.isAuthenticated.set(true);
             this.activeTab.set('dashboard');
+            return;
           }
         }
       } catch (e) {
-        console.warn('Could not restore session from localStorage:', e);
+        console.warn('Could not restore session:', e);
       }
     }
+    // Initially and whenever entering site, lock the platform until user logs in
+    this.isAuthenticated.set(false);
+    this.activeTab.set('auth');
   }
 
   handleSignIn(event?: Event) {
@@ -3324,12 +3339,12 @@ export class App implements OnInit, OnDestroy {
     const email = this.signInEmail.value.trim();
     const password = this.signInPassword.value.trim();
 
-    if (!email) {
-      this.authError.set('Please enter your work email address.');
+    if (!email || !email.includes('@')) {
+      this.authError.set('Please enter a valid corporate work email address.');
       return;
     }
-    if (!password) {
-      this.authError.set('Please enter your security credentials / password.');
+    if (!password || password.length < 4) {
+      this.authError.set('Please enter your account password (at least 4 characters).');
       return;
     }
 
@@ -3337,28 +3352,54 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
-      const matchedDemo = this.demoAccounts().find((a) => a.email.toLowerCase() === email.toLowerCase());
-      const extractedName = matchedDemo ? matchedDemo.name : email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
-      const userRole = matchedDemo ? matchedDemo.role : 'Enterprise Revenue Director';
+      // Check registered users list in localStorage
+      let registeredUsers: { name: string; email: string; company: string; role: string; territory: string; password?: string }[] = [];
+      if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+          const stored = window.localStorage.getItem('salespilot_registered_users');
+          if (stored) registeredUsers = JSON.parse(stored);
+        } catch (e) {}
+      }
 
-      const newProfile = {
-        name: extractedName || 'Enterprise User',
+      const existingUser = registeredUsers.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (existingUser && existingUser.password && existingUser.password !== password) {
+        this.authLoading.set(false);
+        this.authError.set('Incorrect password for this account. Please verify credentials.');
+        return;
+      }
+
+      // Check if user matches any quick demo profile
+      const matchedDemo = this.demoAccounts().find((a) => a.email.toLowerCase() === email.toLowerCase());
+
+      const userName = existingUser ? existingUser.name : (matchedDemo ? matchedDemo.name : email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '));
+      const userRole = existingUser ? existingUser.role : (matchedDemo ? matchedDemo.role : 'Enterprise Revenue Director');
+      const userCompany = existingUser ? existingUser.company : (matchedDemo ? matchedDemo.company : 'Enterprise Workspace');
+      const userTerritory = existingUser ? existingUser.territory : 'Global Accounts';
+
+      const authenticatedProfile = {
+        name: userName || 'Enterprise User',
         email,
         title: userRole,
+        role: userRole,
+        company: userCompany,
+        territory: userTerritory,
       };
 
       this.userProfile.update((p) => ({
         ...p,
-        ...newProfile,
+        ...authenticatedProfile,
       }));
 
-      this.saveSession(newProfile);
+      this.saveSession(authenticatedProfile);
 
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
       this.setTab('dashboard');
-      this.showToast(`Welcome back, ${this.userProfile().name}! Enterprise telemetry active.`);
-    }, 600);
+      this.showToast(`Welcome back, ${this.userProfile().name}! Enterprise workspace unlocked.`);
+    }, 500);
   }
 
   handleSignUp(event?: Event) {
@@ -3374,7 +3415,7 @@ export class App implements OnInit, OnDestroy {
     const confirmPassword = this.signUpConfirmPassword.value.trim();
 
     if (!fullName) {
-      this.authError.set('Full name is required.');
+      this.authError.set('Full name is required to create your account.');
       return;
     }
     if (!workEmail || !workEmail.includes('@')) {
@@ -3402,10 +3443,31 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
+      // Store into registered users in localStorage
+      if (typeof window !== 'undefined' && window.localStorage) {
+        try {
+          const stored = window.localStorage.getItem('salespilot_registered_users');
+          const users = stored ? JSON.parse(stored) : [];
+          users.push({
+            name: fullName,
+            email: workEmail,
+            company,
+            role,
+            territory,
+            password,
+          });
+          window.localStorage.setItem('salespilot_registered_users', JSON.stringify(users));
+        } catch (e) {
+          console.warn('Could not save user to registered list:', e);
+        }
+      }
+
       const newProfile = {
         name: fullName,
         email: workEmail,
         title: role,
+        role,
+        company,
         territory,
       };
 
@@ -3419,8 +3481,8 @@ export class App implements OnInit, OnDestroy {
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
       this.setTab('dashboard');
-      this.showToast(`Enterprise account provisioned for ${fullName} (${company}). Welcome to Sales Pilot!`);
-    }, 750);
+      this.showToast(`Account successfully created for ${fullName} (${company}). Workspace unlocked!`);
+    }, 600);
   }
 
   handleForgotPassword(event?: Event) {
@@ -3444,14 +3506,23 @@ export class App implements OnInit, OnDestroy {
   }
 
   loginWithGoogleSSO() {
+    const email = this.signInEmail.value.trim();
+    if (!email || !email.includes('@')) {
+      this.authError.set('Please enter your Google corporate work email in the email field above to proceed.');
+      return;
+    }
     this.authLoading.set(true);
     this.authError.set(null);
 
     setTimeout(() => {
+      const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
       const ssoProfile = {
-        name: 'Alex Morgan',
-        email: 'alex.morgan@salespilot.ai',
-        title: 'Chief Revenue Officer',
+        name: extractedName || 'Enterprise User',
+        email,
+        title: 'Enterprise Revenue Lead',
+        role: 'Enterprise Member',
+        company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Corporate Workspace',
+        territory: 'Global Accounts',
       };
       this.saveSession(ssoProfile);
       this.isAuthenticated.set(true);
@@ -3461,19 +3532,28 @@ export class App implements OnInit, OnDestroy {
         ...ssoProfile,
       }));
       this.setTab('dashboard');
-      this.showToast('Successfully verified via Google Workspace SSO.');
+      this.showToast(`Verified via Google Workspace SSO. Welcome, ${ssoProfile.name}!`);
     }, 500);
   }
 
-  handleSocialSignIn(provider = 'Google Workspace') {
+  handleSocialSignIn(provider = 'Microsoft Entra ID') {
+    const email = this.signInEmail.value.trim();
+    if (!email || !email.includes('@')) {
+      this.authError.set(`Please enter your work email address above before authenticating with ${provider}.`);
+      return;
+    }
     this.authLoading.set(true);
     this.authError.set(null);
 
     setTimeout(() => {
+      const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
       const ssoProfile = {
-        name: 'Alex Morgan',
-        email: 'alex.morgan@salespilot.ai',
-        title: 'Chief Revenue Officer',
+        name: extractedName || 'Enterprise User',
+        email,
+        title: 'Enterprise Revenue Lead',
+        role: 'Enterprise Member',
+        company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Corporate Workspace',
+        territory: 'Global Accounts',
       };
       this.saveSession(ssoProfile);
       this.isAuthenticated.set(true);
@@ -3483,7 +3563,7 @@ export class App implements OnInit, OnDestroy {
         ...ssoProfile,
       }));
       this.setTab('dashboard');
-      this.showToast(`Successfully verified via ${provider} SSO identity provider.`);
+      this.showToast(`Verified via ${provider} SSO. Welcome, ${ssoProfile.name}!`);
     }, 500);
   }
 
@@ -3966,9 +4046,10 @@ export class App implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.isGeneratingEmail.set(false);
+      const repName = this.userProfile().name || 'Enterprise Account Lead';
       this.generatedEmailContent.set({
         subject: `Tailored Enterprise Scaling & SLA Framework for ${lead.company}`,
-        body: `Hi ${lead.name.split(' ')[0]},\n\nI noticed your team at ${lead.company} has been actively reviewing our enterprise telemetry and multi-region SLA specifications over the last 48 hours.\n\nGiven your team's focus on ${lead.industry.toLowerCase()} reliability, I have prepared a custom executive summary addressing your data isolation requirements and our guaranteed 99.99% availability framework.\n\nWould you have 15 minutes this Thursday at 2 PM PT to review the customized deployment roadmap?\n\nBest regards,\nAlex Morgan\nDirector of Strategic Enterprise, Sales Pilot AI`,
+        body: `Hi ${lead.name.split(' ')[0]},\n\nI noticed your team at ${lead.company} has been actively reviewing our enterprise telemetry and multi-region SLA specifications over the last 48 hours.\n\nGiven your team's focus on ${lead.industry.toLowerCase()} reliability, I have prepared a custom executive summary addressing your data isolation requirements and our guaranteed 99.99% availability framework.\n\nWould you have 15 minutes this Thursday at 2 PM PT to review the customized deployment roadmap?\n\nBest regards,\n${repName}\nDirector of Strategic Enterprise, Sales Pilot AI`,
       });
     }, 900);
   }
@@ -4417,11 +4498,12 @@ export class App implements OnInit, OnDestroy {
       security: `Enterprise SOC2 Type II, Encryption & Compliance Packet for ${lead.company}`,
     };
 
+    const repName = this.userProfile().name || 'Enterprise Account Lead';
     const toneBodies: Record<string, string> = {
-      executive: `Hi ${lead.name.split(' ')[0]},\n\nGiven your team's focus on ${lead.industry.toLowerCase()} growth, our enterprise acceleration platform is designed to streamline deal velocity and ensure high-fidelity forecasting for ${lead.company}.\n\nOur guaranteed 99.99% multi-region SLA and dedicated support tier are tailored for your current scaling phase.\n\nWould you have 15 minutes this Thursday to align on target deployment milestones?\n\nBest regards,\nAlex Morgan\nStrategic Enterprise Lead`,
-      technical: `Hi ${lead.name.split(' ')[0]},\n\nFollowing up on your architecture review for ${lead.company}. I've synthesized our webhook throughput benchmarks (500k events/sec) and dedicated VPC peering configuration.\n\nOur engineering team has confirmed compatibility with your existing tech stack with zero payload loss.\n\nLet me know if you would like to test our sandbox instance directly with your engineering leads.\n\nBest regards,\nAlex Morgan`,
-      urgent: `Hi ${lead.name.split(' ')[0]},\n\nI wanted to bring to your attention that our executive committee has authorized a Q3 Tier-1 enterprise package for ${lead.company}, which includes complimentary white-glove migration and prioritized SLAs if finalized before August 31.\n\nShall we connect briefly tomorrow to review the commercial terms?\n\nBest regards,\nAlex Morgan`,
-      security: `Hi ${lead.name.split(' ')[0]},\n\nTo assist your security and infosec team at ${lead.company}, I have attached our complete SOC2 Type II compliance audit, penetration testing summary, and ISO 27001 attestation.\n\nOur data residency supports full regional isolation with AES-256 encryption at rest and in transit.\n\nPlease let me know if your CISO requires any additional clarifications.\n\nBest regards,\nAlex Morgan`,
+      executive: `Hi ${lead.name.split(' ')[0]},\n\nGiven your team's focus on ${lead.industry.toLowerCase()} growth, our enterprise acceleration platform is designed to streamline deal velocity and ensure high-fidelity forecasting for ${lead.company}.\n\nOur guaranteed 99.99% multi-region SLA and dedicated support tier are tailored for your current scaling phase.\n\nWould you have 15 minutes this Thursday to align on target deployment milestones?\n\nBest regards,\n${repName}\nStrategic Enterprise Lead`,
+      technical: `Hi ${lead.name.split(' ')[0]},\n\nFollowing up on your architecture review for ${lead.company}. I've synthesized our webhook throughput benchmarks (500k events/sec) and dedicated VPC peering configuration.\n\nOur engineering team has confirmed compatibility with your existing tech stack with zero payload loss.\n\nLet me know if you would like to test our sandbox instance directly with your engineering leads.\n\nBest regards,\n${repName}`,
+      urgent: `Hi ${lead.name.split(' ')[0]},\n\nI wanted to bring to your attention that our executive committee has authorized a Q3 Tier-1 enterprise package for ${lead.company}, which includes complimentary white-glove migration and prioritized SLAs if finalized before August 31.\n\nShall we connect briefly tomorrow to review the commercial terms?\n\nBest regards,\n${repName}`,
+      security: `Hi ${lead.name.split(' ')[0]},\n\nTo assist your security and infosec team at ${lead.company}, I have attached our complete SOC2 Type II compliance audit, penetration testing summary, and ISO 27001 attestation.\n\nOur data residency supports full regional isolation with AES-256 encryption at rest and in transit.\n\nPlease let me know if your CISO requires any additional clarifications.\n\nBest regards,\n${repName}`,
     };
 
     this.generatedEmailContent.set({
