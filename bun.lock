@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "ai-studio-angular-app",
+      "name": "sales-pilot-ai",
       "dependencies": {
         "@angular/cdk": "^21.0.0",
         "@angular/common": "^21.0.0",

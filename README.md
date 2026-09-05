@@ -1,10 +1,9 @@
 # Sales Pilot AI
 
 <div align="center">
-  <img width="1200" height="475" alt="Sales Pilot AI Header Banner" src="" />
-
+  <h1>⚡ Sales Pilot AI</h1>
   <p align="center">
-    <strong>Next-Generation Enterprise Revenue Operations & Autonomous Sales Copilot Platform</strong>
+    <strong>Enterprise Revenue Operations, Autonomous Sales Copilot & MEDDPICC Intelligence Platform</strong>
   </p>
 
   <p align="center">
@@ -193,7 +192,7 @@ APP_URL="http://localhost:3000"
 PORT=3000
 ```
 
-> **Tip:** You can obtain a Gemini API key free of charge at [Google AI Studio](https://aistudio.google.com/).
+> **Tip:** You can obtain a Gemini API key from the [Google AI for Developers](https://ai.google.dev/) portal.
 
 ### 4. Run Development Server
 ```bash
