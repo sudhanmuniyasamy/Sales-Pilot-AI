@@ -1,0 +1,9 @@
+{
+  "name": "Sales Pilot AI",
+  "description": "Advanced CRM & Revenue Operations platform featuring Enterprise Sign In & Sign Up Authentication, Google Gemini Multi-Turn AI Revenue Copilot & Chatbot, CRM Dataset Ingestion Hub, AI lead scoring, MEDDPICC qualification, Pipeline Velocity indexing, and Global Command Deck.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
+ 

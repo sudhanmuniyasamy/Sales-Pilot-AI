@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #F6F3EC;
+    color: #17150F;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-display {
+  font-family: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+}
+
+.font-body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Ticker marquee animation */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 42s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* Card hover lift rule per design tokens */
+.bento-card {
+  background-color: #FFFFFF;
+  border: 1px solid #EAE4D4;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(23, 21, 15, 0.06), 0 2px 6px -1px rgba(23, 21, 15, 0.04);
+}
+
+/* Pulse signal line dash */
+@keyframes pulseSignal {
+  0% {
+    stroke-dashoffset: 24;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-signal-line {
+  stroke-dasharray: 4 4;
+  animation: pulseSignal 2s linear infinite;
+}
+
+/* Custom scrollbar for data tables */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #F6F3EC;
+}
+::-webkit-scrollbar-thumb {
+  background: #EAE4D4;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8C8672;
+}
+
