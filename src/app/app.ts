@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import {
   CrmAccount,
   CrmProduct,
@@ -247,7 +247,7 @@ export interface SequenceCadence {
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
-  imports: [CommonModule, MatIconModule, ReactiveFormsModule],
+  imports: [CommonModule, MatIconModule, ReactiveFormsModule, FormsModule],
   templateUrl: './app.html',
   styleUrl: './app.css',
   host: {
@@ -255,6 +255,7 @@ export interface SequenceCadence {
   },
 })
 export class App implements OnInit, OnDestroy {
+  private cdr = inject(ChangeDetectorRef);
   readonly Math = Math;
   readonly activeTab = signal<'dashboard' | 'leads' | 'analytics' | 'sequences' | 'settings' | 'profile' | 'dataset' | 'copilot' | 'auth'>('auth');
   readonly mobileMenuOpen = signal<boolean>(false);
@@ -368,13 +369,13 @@ export class App implements OnInit, OnDestroy {
   readonly signInRememberMe = signal<boolean>(false);
 
   readonly userInitials = computed<string>(() => {
-    const name = this.userProfile().name.trim();
-    if (!name) return 'U';
+    const name = (this.userProfile()?.name || '').trim();
+    if (!name) return 'SA';
     const parts = name.split(/\s+/);
-    if (parts.length >= 2) {
+    if (parts.length >= 2 && parts[0] && parts[1]) {
       return (parts[0][0] + parts[1][0]).toUpperCase();
     }
-    return name.slice(0, 2).toUpperCase();
+    return (name.slice(0, 2) || 'SA').toUpperCase();
   });
 
   // Sign Up Form Controls
@@ -3281,9 +3282,15 @@ export class App implements OnInit, OnDestroy {
   }
 
   private saveSession(profile: { name: string; email: string; title: string; role?: string; quotaTarget?: string; attainment?: number; territory?: string; company?: string }) {
-    if (typeof window !== 'undefined' && window.sessionStorage) {
+    if (typeof window !== 'undefined') {
       try {
-        window.sessionStorage.setItem('salespilot_active_session', JSON.stringify(profile));
+        const payload = JSON.stringify(profile);
+        if (window.sessionStorage) {
+          window.sessionStorage.setItem('salespilot_active_session', payload);
+        }
+        if (window.localStorage) {
+          window.localStorage.setItem('salespilot_active_session', payload);
+        }
       } catch (e) {
         console.warn('Could not save session:', e);
       }
@@ -3297,6 +3304,7 @@ export class App implements OnInit, OnDestroy {
           window.sessionStorage.removeItem('salespilot_active_session');
         }
         if (window.localStorage) {
+          window.localStorage.removeItem('salespilot_active_session');
           window.localStorage.removeItem('salespilot_remembered_session');
         }
       } catch (e) {
@@ -3308,11 +3316,12 @@ export class App implements OnInit, OnDestroy {
   private restoreSession() {
     if (typeof window !== 'undefined') {
       try {
-        // Only restore if user has an active session in the current tab/session
         const sessionStored = window.sessionStorage ? window.sessionStorage.getItem('salespilot_active_session') : null;
+        const localStored = window.localStorage ? window.localStorage.getItem('salespilot_active_session') : null;
+        const stored = sessionStored || localStored;
 
-        if (sessionStored) {
-          const parsed = JSON.parse(sessionStored);
+        if (stored) {
+          const parsed = JSON.parse(stored);
           if (parsed && parsed.name && parsed.email) {
             this.userProfile.update((p) => ({
               ...p,
@@ -3320,6 +3329,7 @@ export class App implements OnInit, OnDestroy {
             }));
             this.isAuthenticated.set(true);
             this.activeTab.set('dashboard');
+            this.cdr.markForCheck();
             return;
           }
         }
@@ -3327,279 +3337,272 @@ export class App implements OnInit, OnDestroy {
         console.warn('Could not restore session:', e);
       }
     }
-    // Initially and whenever entering site, lock the platform until user logs in
     this.isAuthenticated.set(false);
     this.activeTab.set('auth');
+    this.cdr.markForCheck();
+  }
+
+  loginAsAdminDirectly() {
+    this.signInEmail.setValue('admin');
+    this.signInPassword.setValue('admin123');
+    this.handleSignIn();
   }
 
   handleSignIn(event?: Event) {
     if (event) {
-      event.preventDefault();
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
     }
-    let email = this.signInEmail.value.trim();
-    const password = this.signInPassword.value.trim();
+    let email = (this.signInEmail.value || '').trim();
+    const password = (this.signInPassword.value || '').trim();
 
     // Map common admin usernames to admin@salespilot.ai
     if (email.toLowerCase() === 'admin' || email.toLowerCase() === 'root') {
       email = 'admin@salespilot.ai';
     }
 
-    if (!email || !email.includes('@')) {
-      this.authError.set('Please enter a valid corporate work email or User ID (e.g. admin or admin@salespilot.ai).');
+    if (!email) {
+      this.authError.set('Please enter your Corporate Email or User ID (e.g. admin or your email).');
+      this.cdr.markForCheck();
       return;
     }
-    if (!password || password.length < 4) {
-      this.authError.set('Please enter your account password (at least 4 characters).');
+    if (!password) {
+      this.authError.set('Please enter your password.');
+      this.cdr.markForCheck();
       return;
     }
 
-    this.authLoading.set(true);
+    this.authLoading.set(false);
     this.authError.set(null);
 
-    setTimeout(() => {
-      // 1. Built-in Master Admin Account Check
-      if (email.toLowerCase() === 'admin@salespilot.ai') {
-        if (password !== 'admin123' && password !== 'Admin@2026' && password !== 'admin') {
-          this.authLoading.set(false);
-          this.authError.set('Incorrect admin password. Default admin password is: admin123');
-          return;
-        }
-
-        const adminProfile = {
-          name: 'System Administrator',
-          email: 'admin@salespilot.ai',
-          title: 'Chief Revenue Officer & Platform Admin',
-          role: 'Chief Revenue Officer (Full Admin Access)',
-          company: 'Sales Pilot Global HQ',
-          territory: 'Global Strategic Operations',
-          quotaTarget: '$5,000,000',
-          attainment: 94.5,
-        };
-
-        this.userProfile.update((p) => ({
-          ...p,
-          ...adminProfile,
-        }));
-        this.saveSession(adminProfile);
-        this.isAuthenticated.set(true);
-        this.authLoading.set(false);
-        this.setTab('dashboard');
-        this.showToast('Logged in as System Administrator. Full enterprise privileges active.');
-        return;
-      }
-      // Check registered users list in localStorage
-      let registeredUsers: { name: string; email: string; company: string; role: string; territory: string; password?: string }[] = [];
-      if (typeof window !== 'undefined' && window.localStorage) {
-        try {
-          const stored = window.localStorage.getItem('salespilot_registered_users');
-          if (stored) registeredUsers = JSON.parse(stored);
-        } catch (e) {}
-      }
-
-      const existingUser = registeredUsers.find(
-        (u) => u.email.toLowerCase() === email.toLowerCase()
-      );
-
-      if (existingUser && existingUser.password && existingUser.password !== password) {
-        this.authLoading.set(false);
-        this.authError.set('Incorrect password for this account. Please verify credentials.');
+    // 1. Built-in Master Admin Account Check
+    if (email.toLowerCase() === 'admin@salespilot.ai' || email.toLowerCase() === 'admin') {
+      if (password !== 'admin123' && password !== 'Admin@2026' && password !== 'admin') {
+        this.authError.set('Incorrect admin password. Default admin password is: admin123');
+        this.cdr.markForCheck();
         return;
       }
 
-      // Check if user matches any quick demo profile
-      const matchedDemo = this.demoAccounts().find((a) => a.email.toLowerCase() === email.toLowerCase());
-
-      const userName = existingUser ? existingUser.name : (matchedDemo ? matchedDemo.name : email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '));
-      const userRole = existingUser ? existingUser.role : (matchedDemo ? matchedDemo.role : 'Enterprise Revenue Director');
-      const userCompany = existingUser ? existingUser.company : (matchedDemo ? matchedDemo.company : 'Enterprise Workspace');
-      const userTerritory = existingUser ? existingUser.territory : 'Global Accounts';
-
-      const authenticatedProfile = {
-        name: userName || 'Enterprise User',
-        email,
-        title: userRole,
-        role: userRole,
-        company: userCompany,
-        territory: userTerritory,
+      const adminProfile = {
+        name: 'System Administrator',
+        email: 'admin@salespilot.ai',
+        title: 'Chief Revenue Officer & Platform Admin',
+        role: 'Chief Revenue Officer (Full Admin Access)',
+        company: 'Sales Pilot Global HQ',
+        territory: 'Global Strategic Operations',
+        quotaTarget: '$5,000,000',
+        attainment: 94.5,
       };
 
       this.userProfile.update((p) => ({
         ...p,
-        ...authenticatedProfile,
+        ...adminProfile,
       }));
-
-      this.saveSession(authenticatedProfile);
-
+      this.saveSession(adminProfile);
       this.isAuthenticated.set(true);
-      this.authLoading.set(false);
       this.setTab('dashboard');
-      this.showToast(`Welcome back, ${this.userProfile().name}! Enterprise workspace unlocked.`);
-    }, 500);
+      this.showToast('Logged in as Administrator. Full enterprise access active.');
+      this.cdr.markForCheck();
+      return;
+    }
+
+    // 2. Check registered users list in localStorage
+    let registeredUsers: { name: string; email: string; company?: string; role?: string; territory?: string; password?: string }[] = [];
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const stored = window.localStorage.getItem('salespilot_registered_users');
+        if (stored) registeredUsers = JSON.parse(stored);
+      } catch (e) {}
+    }
+
+    const existingUser = registeredUsers.find(
+      (u) => u.email.toLowerCase() === email.toLowerCase()
+    );
+
+    if (existingUser && existingUser.password && existingUser.password !== password) {
+      this.authError.set('Incorrect password for this account. Please verify credentials.');
+      this.cdr.markForCheck();
+      return;
+    }
+
+    // Check if user matches any quick demo profile
+    const matchedDemo = this.demoAccounts().find((a) => a.email.toLowerCase() === email.toLowerCase());
+
+    const userName = existingUser ? existingUser.name : (matchedDemo ? matchedDemo.name : email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' '));
+    const userRole = existingUser?.role || matchedDemo?.role || 'Enterprise Revenue Director';
+    const userCompany = existingUser?.company || matchedDemo?.company || 'Enterprise Workspace';
+    const userTerritory = existingUser?.territory || 'Global Accounts';
+
+    const authenticatedProfile = {
+      name: userName || 'Enterprise User',
+      email,
+      title: userRole,
+      role: userRole,
+      company: userCompany,
+      territory: userTerritory,
+    };
+
+    this.userProfile.update((p) => ({
+      ...p,
+      ...authenticatedProfile,
+    }));
+
+    this.saveSession(authenticatedProfile);
+    this.isAuthenticated.set(true);
+    this.setTab('dashboard');
+    this.showToast(`Welcome back, ${this.userProfile().name}! Enterprise workspace unlocked.`);
+    this.cdr.markForCheck();
   }
 
   handleSignUp(event?: Event) {
     if (event) {
-      event.preventDefault();
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
     }
-    const fullName = this.signUpFullName.value.trim();
-    const workEmail = this.signUpWorkEmail.value.trim();
-    const company = this.signUpCompany.value.trim();
-    const role = this.signUpRole.value.trim() || 'Director of Strategic Enterprise';
-    const territory = this.signUpTerritory.value.trim() || 'Global Enterprise Accounts';
-    const password = this.signUpPassword.value.trim();
-    const confirmPassword = this.signUpConfirmPassword.value.trim();
+    const fullName = (this.signUpFullName.value || '').trim();
+    const workEmail = (this.signUpWorkEmail.value || '').trim();
+    const company = (this.signUpCompany.value || '').trim() || 'Enterprise Org';
+    const role = (this.signUpRole.value || '').trim() || 'Director of Strategic Enterprise';
+    const territory = (this.signUpTerritory.value || '').trim() || 'Global Enterprise Accounts';
+    const password = (this.signUpPassword.value || '').trim();
+    const confirmPassword = (this.signUpConfirmPassword.value || '').trim();
 
     if (!fullName) {
-      this.authError.set('Full name is required to create your account.');
+      this.authError.set('Please enter your full name.');
+      this.cdr.markForCheck();
       return;
     }
     if (!workEmail || !workEmail.includes('@')) {
-      this.authError.set('A valid corporate work email is required.');
+      this.authError.set('Please enter a valid work email (e.g. user@company.com).');
+      this.cdr.markForCheck();
       return;
     }
-    if (!company) {
-      this.authError.set('Company or organization name is required.');
+    if (!password || password.length < 4) {
+      this.authError.set('Password must contain at least 4 characters.');
+      this.cdr.markForCheck();
       return;
     }
-    if (!password || password.length < 6) {
-      this.authError.set('Password must contain at least 6 characters.');
-      return;
-    }
-    if (password !== confirmPassword) {
+    if (confirmPassword && password !== confirmPassword) {
       this.authError.set('Passwords do not match. Please verify your entries.');
-      return;
-    }
-    if (!this.signUpAgreeTerms()) {
-      this.authError.set('You must accept the Enterprise Service Agreement to proceed.');
+      this.cdr.markForCheck();
       return;
     }
 
-    this.authLoading.set(true);
+    this.authLoading.set(false);
     this.authError.set(null);
 
-    setTimeout(() => {
-      // Store into registered users in localStorage
-      if (typeof window !== 'undefined' && window.localStorage) {
-        try {
-          const stored = window.localStorage.getItem('salespilot_registered_users');
-          const users = stored ? JSON.parse(stored) : [];
-          users.push({
-            name: fullName,
-            email: workEmail,
-            company,
-            role,
-            territory,
-            password,
-          });
-          window.localStorage.setItem('salespilot_registered_users', JSON.stringify(users));
-        } catch (e) {
-          console.warn('Could not save user to registered list:', e);
-        }
+    // Store into registered users in localStorage
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const stored = window.localStorage.getItem('salespilot_registered_users');
+        const users = stored ? JSON.parse(stored) : [];
+        users.push({
+          name: fullName,
+          email: workEmail,
+          company,
+          role,
+          territory,
+          password,
+        });
+        window.localStorage.setItem('salespilot_registered_users', JSON.stringify(users));
+      } catch (e) {
+        console.warn('Could not save user to registered list:', e);
       }
+    }
 
-      const newProfile = {
-        name: fullName,
-        email: workEmail,
-        title: role,
-        role,
-        company,
-        territory,
-      };
+    const newProfile = {
+      name: fullName,
+      email: workEmail,
+      title: role,
+      role,
+      company,
+      territory,
+    };
 
-      this.userProfile.update((p) => ({
-        ...p,
-        ...newProfile,
-      }));
+    this.userProfile.update((p) => ({
+      ...p,
+      ...newProfile,
+    }));
 
-      this.saveSession(newProfile);
+    this.saveSession(newProfile);
 
-      this.isAuthenticated.set(true);
-      this.authLoading.set(false);
-      this.setTab('dashboard');
-      this.showToast(`Account successfully created for ${fullName} (${company}). Workspace unlocked!`);
-    }, 600);
+    this.isAuthenticated.set(true);
+    this.setTab('dashboard');
+    this.showToast(`Account successfully created for ${fullName} (${company}). Workspace unlocked!`);
+    this.cdr.markForCheck();
   }
 
   handleForgotPassword(event?: Event) {
     if (event) {
-      event.preventDefault();
+      if (typeof event.preventDefault === 'function') event.preventDefault();
+      if (typeof event.stopPropagation === 'function') event.stopPropagation();
     }
     const email = this.forgotPasswordEmail.value.trim();
     if (!email || !email.includes('@')) {
       this.authError.set('Please enter a valid work email address.');
+      this.cdr.markForCheck();
       return;
     }
 
-    this.authLoading.set(true);
+    this.authLoading.set(false);
     this.authError.set(null);
-
-    setTimeout(() => {
-      this.authLoading.set(false);
-      this.authSuccessMessage.set(`Password recovery link and OTP instructions dispatched to ${email}. Check your inbox.`);
-      this.showToast(`Password reset instructions sent to ${email}.`);
-    }, 600);
+    this.authSuccessMessage.set(`Password recovery link dispatched to ${email}. Check your corporate inbox.`);
+    this.showToast(`Password reset instructions dispatched to ${email}.`);
+    this.cdr.markForCheck();
   }
 
   loginWithGoogleSSO() {
-    const email = this.signInEmail.value.trim();
+    let email = (this.signInEmail.value || '').trim();
     if (!email || !email.includes('@')) {
-      this.authError.set('Please enter your Google corporate work email in the email field above to proceed.');
-      return;
+      email = 'executive.google@salespilot.ai';
     }
-    this.authLoading.set(true);
+    const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+    const ssoProfile = {
+      name: extractedName || 'Google SSO Executive',
+      email,
+      title: 'VP of Global Revenue (Google SSO)',
+      role: 'Enterprise Member',
+      company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Google Partner Org',
+      territory: 'Global Strategic Accounts',
+    };
+    this.saveSession(ssoProfile);
+    this.authLoading.set(false);
     this.authError.set(null);
-
-    setTimeout(() => {
-      const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
-      const ssoProfile = {
-        name: extractedName || 'Enterprise User',
-        email,
-        title: 'Enterprise Revenue Lead',
-        role: 'Enterprise Member',
-        company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Corporate Workspace',
-        territory: 'Global Accounts',
-      };
-      this.saveSession(ssoProfile);
-      this.isAuthenticated.set(true);
-      this.authLoading.set(false);
-      this.userProfile.update((p) => ({
-        ...p,
-        ...ssoProfile,
-      }));
-      this.setTab('dashboard');
-      this.showToast(`Verified via Google Workspace SSO. Welcome, ${ssoProfile.name}!`);
-    }, 500);
+    this.userProfile.update((p) => ({
+      ...p,
+      ...ssoProfile,
+    }));
+    this.isAuthenticated.set(true);
+    this.setTab('dashboard');
+    this.showToast(`Verified via Google Workspace SSO. Welcome, ${ssoProfile.name}!`);
+    this.cdr.markForCheck();
   }
 
   handleSocialSignIn(provider = 'Microsoft Entra ID') {
-    const email = this.signInEmail.value.trim();
+    let email = (this.signInEmail.value || '').trim();
     if (!email || !email.includes('@')) {
-      this.authError.set(`Please enter your work email address above before authenticating with ${provider}.`);
-      return;
+      email = 'executive.azure@salespilot.ai';
     }
-    this.authLoading.set(true);
+    const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+    const ssoProfile = {
+      name: extractedName || 'Enterprise Executive',
+      email,
+      title: `Director of Sales (${provider})`,
+      role: 'Enterprise Member',
+      company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Enterprise Cloud Org',
+      territory: 'Global Strategic Accounts',
+    };
+    this.saveSession(ssoProfile);
+    this.authLoading.set(false);
     this.authError.set(null);
-
-    setTimeout(() => {
-      const extractedName = email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
-      const ssoProfile = {
-        name: extractedName || 'Enterprise User',
-        email,
-        title: 'Enterprise Revenue Lead',
-        role: 'Enterprise Member',
-        company: email.split('@')[1]?.split('.')[0]?.toUpperCase() || 'Corporate Workspace',
-        territory: 'Global Accounts',
-      };
-      this.saveSession(ssoProfile);
-      this.isAuthenticated.set(true);
-      this.authLoading.set(false);
-      this.userProfile.update((p) => ({
-        ...p,
-        ...ssoProfile,
-      }));
-      this.setTab('dashboard');
-      this.showToast(`Verified via ${provider} SSO. Welcome, ${ssoProfile.name}!`);
-    }, 500);
+    this.userProfile.update((p) => ({
+      ...p,
+      ...ssoProfile,
+    }));
+    this.isAuthenticated.set(true);
+    this.setTab('dashboard');
+    this.showToast(`Verified via ${provider} SSO. Welcome, ${ssoProfile.name}!`);
+    this.cdr.markForCheck();
   }
 
   private fxIntervalId: ReturnType<typeof setInterval> | null = null;
