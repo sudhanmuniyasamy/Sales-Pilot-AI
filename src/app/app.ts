@@ -3336,11 +3336,16 @@ export class App implements OnInit, OnDestroy {
     if (event) {
       event.preventDefault();
     }
-    const email = this.signInEmail.value.trim();
+    let email = this.signInEmail.value.trim();
     const password = this.signInPassword.value.trim();
 
+    // Map common admin usernames to admin@salespilot.ai
+    if (email.toLowerCase() === 'admin' || email.toLowerCase() === 'root') {
+      email = 'admin@salespilot.ai';
+    }
+
     if (!email || !email.includes('@')) {
-      this.authError.set('Please enter a valid corporate work email address.');
+      this.authError.set('Please enter a valid corporate work email or User ID (e.g. admin or admin@salespilot.ai).');
       return;
     }
     if (!password || password.length < 4) {
@@ -3352,6 +3357,36 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
+      // 1. Built-in Master Admin Account Check
+      if (email.toLowerCase() === 'admin@salespilot.ai') {
+        if (password !== 'admin123' && password !== 'Admin@2026' && password !== 'admin') {
+          this.authLoading.set(false);
+          this.authError.set('Incorrect admin password. Default admin password is: admin123');
+          return;
+        }
+
+        const adminProfile = {
+          name: 'System Administrator',
+          email: 'admin@salespilot.ai',
+          title: 'Chief Revenue Officer & Platform Admin',
+          role: 'Chief Revenue Officer (Full Admin Access)',
+          company: 'Sales Pilot Global HQ',
+          territory: 'Global Strategic Operations',
+          quotaTarget: '$5,000,000',
+          attainment: 94.5,
+        };
+
+        this.userProfile.update((p) => ({
+          ...p,
+          ...adminProfile,
+        }));
+        this.saveSession(adminProfile);
+        this.isAuthenticated.set(true);
+        this.authLoading.set(false);
+        this.setTab('dashboard');
+        this.showToast('Logged in as System Administrator. Full enterprise privileges active.');
+        return;
+      }
       // Check registered users list in localStorage
       let registeredUsers: { name: string; email: string; company: string; role: string; territory: string; password?: string }[] = [];
       if (typeof window !== 'undefined' && window.localStorage) {

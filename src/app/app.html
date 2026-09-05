@@ -214,18 +214,18 @@
                     <div class="flex-1 border-t border-[#EAE4D4]"></div>
                   </div>
 
-                  <!-- Email Input (Clean, empty by default) -->
+                  <!-- Email / User ID Input -->
                   <div class="space-y-1">
                     <label for="signin-email-input" class="block text-xs font-mono font-semibold text-[#17150F]">
-                      Corporate Email *
+                      Corporate Email or User ID *
                     </label>
                     <div class="relative">
                       <input 
                         id="signin-email-input"
-                        type="email"
+                        type="text"
                         [formControl]="signInEmail"
-                        placeholder="you@company.com"
-                        autocomplete="email"
+                        placeholder="admin or your corporate email"
+                        autocomplete="username"
                         class="w-full px-3.5 py-2.5 pl-10 bg-[#F6F3EC]/70 border border-[#EAE4D4] rounded-xl text-xs font-mono text-[#17150F] placeholder-[#8C8672] focus:outline-none focus:ring-2 focus:ring-[#A9772D]/50 focus:border-[#A9772D] transition-all">
                       <mat-icon class="absolute left-3 top-2.5 text-[#8C8672] text-base">alternate_email</mat-icon>
                     </div>
@@ -259,6 +259,19 @@
                         class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#8C8672] hover:text-[#17150F] cursor-pointer">
                         <mat-icon class="text-base">{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
                       </button>
+                    </div>
+                  </div>
+
+                  <!-- Master Admin Credentials Tip -->
+                  <div class="p-2.5 rounded-xl bg-[#0B6B53]/8 border border-[#0B6B53]/20 flex items-center justify-between text-xs font-mono">
+                    <div class="flex items-center space-x-2 text-[#0B6B53]">
+                      <mat-icon class="text-sm">verified_user</mat-icon>
+                      <span class="font-bold text-[11px]">Admin Access:</span>
+                    </div>
+                    <div class="text-[#17150F] text-[11px]">
+                      <code class="bg-[#FFFFFF] px-1.5 py-0.5 rounded border border-[#EAE4D4] text-[#0B6B53] font-bold">admin</code>
+                      <span class="mx-1 text-[#8C8672]">/</span>
+                      <code class="bg-[#FFFFFF] px-1.5 py-0.5 rounded border border-[#EAE4D4] text-[#A9772D] font-bold">admin123</code>
                     </div>
                   </div>
 
