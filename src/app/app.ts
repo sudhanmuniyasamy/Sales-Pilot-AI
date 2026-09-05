@@ -256,7 +256,7 @@ export interface SequenceCadence {
 })
 export class App implements OnInit, OnDestroy {
   readonly Math = Math;
-  readonly activeTab = signal<'dashboard' | 'leads' | 'analytics' | 'sequences' | 'settings' | 'profile' | 'dataset' | 'copilot' | 'auth'>('dashboard');
+  readonly activeTab = signal<'dashboard' | 'leads' | 'analytics' | 'sequences' | 'settings' | 'profile' | 'dataset' | 'copilot' | 'auth'>('auth');
   readonly mobileMenuOpen = signal<boolean>(false);
   readonly isAnalyzing = signal<boolean>(false);
   readonly showNewLeadModal = signal<boolean>(false);
@@ -354,7 +354,7 @@ export class App implements OnInit, OnDestroy {
   // =========================================================================
   // USER AUTHENTICATION & ACCESS CONTROL (SIGN IN / SIGN UP)
   // =========================================================================
-  readonly isAuthenticated = signal<boolean>(true);
+  readonly isAuthenticated = signal<boolean>(false);
   readonly authMode = signal<'signin' | 'signup' | 'forgot_password'>('signin');
   readonly authLoading = signal<boolean>(false);
   readonly authError = signal<string | null>(null);
@@ -3246,6 +3246,15 @@ export class App implements OnInit, OnDestroy {
         attainment: account.attainment,
       }));
 
+      this.saveSession({
+        name: account.name,
+        email: account.email,
+        title: account.role,
+        role: account.role,
+        quotaTarget: account.quota,
+        attainment: account.attainment,
+      });
+
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
       this.authSuccessMessage.set(null);
@@ -3258,6 +3267,53 @@ export class App implements OnInit, OnDestroy {
     const account = this.demoAccounts().find((a) => a.id === demoId);
     if (account) {
       this.loginAsDemoAccount(account);
+    }
+  }
+
+  exploreAsGuest() {
+    this.isAuthenticated.set(true);
+    this.setTab('dashboard');
+    this.showToast('Exploring Sales Pilot AI in Demo Guest Mode.');
+  }
+
+  private saveSession(profile: { name: string; email: string; title: string; role?: string; quotaTarget?: string; attainment?: number; territory?: string }) {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        window.localStorage.setItem('salespilot_user_session', JSON.stringify(profile));
+      } catch (e) {
+        console.warn('Could not save session to localStorage:', e);
+      }
+    }
+  }
+
+  private clearSession() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        window.localStorage.removeItem('salespilot_user_session');
+      } catch (e) {
+        console.warn('Could not clear session from localStorage:', e);
+      }
+    }
+  }
+
+  private restoreSession() {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      try {
+        const stored = window.localStorage.getItem('salespilot_user_session');
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && parsed.name && parsed.email) {
+            this.userProfile.update((p) => ({
+              ...p,
+              ...parsed,
+            }));
+            this.isAuthenticated.set(true);
+            this.activeTab.set('dashboard');
+          }
+        }
+      } catch (e) {
+        console.warn('Could not restore session from localStorage:', e);
+      }
     }
   }
 
@@ -3285,12 +3341,18 @@ export class App implements OnInit, OnDestroy {
       const extractedName = matchedDemo ? matchedDemo.name : email.split('@')[0].split('.').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
       const userRole = matchedDemo ? matchedDemo.role : 'Enterprise Revenue Director';
 
-      this.userProfile.update((p) => ({
-        ...p,
+      const newProfile = {
         name: extractedName || 'Enterprise User',
         email,
         title: userRole,
+      };
+
+      this.userProfile.update((p) => ({
+        ...p,
+        ...newProfile,
       }));
+
+      this.saveSession(newProfile);
 
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
@@ -3340,13 +3402,19 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
-      this.userProfile.update((p) => ({
-        ...p,
+      const newProfile = {
         name: fullName,
         email: workEmail,
         title: role,
         territory,
+      };
+
+      this.userProfile.update((p) => ({
+        ...p,
+        ...newProfile,
       }));
+
+      this.saveSession(newProfile);
 
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
@@ -3380,12 +3448,17 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
+      const ssoProfile = {
+        name: 'Alex Morgan',
+        email: 'alex.morgan@salespilot.ai',
+        title: 'Chief Revenue Officer',
+      };
+      this.saveSession(ssoProfile);
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
       this.userProfile.update((p) => ({
         ...p,
-        name: 'Alex Morgan',
-        email: 'alex.morgan@salespilot.ai',
+        ...ssoProfile,
       }));
       this.setTab('dashboard');
       this.showToast('Successfully verified via Google Workspace SSO.');
@@ -3397,12 +3470,17 @@ export class App implements OnInit, OnDestroy {
     this.authError.set(null);
 
     setTimeout(() => {
+      const ssoProfile = {
+        name: 'Alex Morgan',
+        email: 'alex.morgan@salespilot.ai',
+        title: 'Chief Revenue Officer',
+      };
+      this.saveSession(ssoProfile);
       this.isAuthenticated.set(true);
       this.authLoading.set(false);
       this.userProfile.update((p) => ({
         ...p,
-        name: 'Alex Morgan',
-        email: 'alex.morgan@salespilot.ai',
+        ...ssoProfile,
       }));
       this.setTab('dashboard');
       this.showToast(`Successfully verified via ${provider} SSO identity provider.`);
@@ -3412,6 +3490,9 @@ export class App implements OnInit, OnDestroy {
   private fxIntervalId: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit(): void {
+    // Restore persistent session if present
+    this.restoreSession();
+
     // Initial fetch of daily FX rates
     this.syncDailyExchangeRates(false);
 
@@ -3643,6 +3724,7 @@ export class App implements OnInit, OnDestroy {
   }
 
   handleSignOut() {
+    this.clearSession();
     this.isAuthenticated.set(false);
     this.authMode.set('signin');
     this.authError.set(null);

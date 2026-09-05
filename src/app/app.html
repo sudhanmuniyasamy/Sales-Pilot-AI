@@ -334,6 +334,38 @@
               <div class="text-[10px] text-[#8C8672] font-mono mt-0.5 truncate">Scikit-Pulse & Weights</div>
             </div>
           </button>
+
+          <!-- 8. Sign In / Sign Up Access Portal Tab -->
+          <button 
+            type="button"
+            id="nav-rail-auth"
+            (click)="openAuthPage('signin')"
+            [class.bg-[#A9772D]/12]="activeTab() === 'auth'"
+            [class.text-[#A9772D]]="activeTab() === 'auth'"
+            [class.text-[#17150F]]="activeTab() !== 'auth'"
+            [class.hover:bg-[#F6F3EC]]="activeTab() !== 'auth'"
+            class="relative w-full h-11 flex items-center px-2 lg:px-2.5 rounded-xl transition-all cursor-pointer text-left group justify-center lg:justify-start"
+            title="Sign In / Sign Up Portal">
+            @if (activeTab() === 'auth') {
+              <span class="absolute left-0 top-2 bottom-2 w-1 bg-[#A9772D] rounded-r-full"></span>
+            }
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mr-0 lg:mr-2.5"
+              [class.bg-[#A9772D]/15]="activeTab() === 'auth'"
+              [class.bg-[#F6F3EC]]="activeTab() !== 'auth'">
+              <mat-icon class="text-lg">lock</mat-icon>
+            </div>
+            <div class="flex-1 min-w-0 hidden lg:block">
+              <div class="font-display font-bold text-xs leading-none flex items-center justify-between">
+                <span class="truncate">Sign In / Sign Up</span>
+                @if (isAuthenticated()) {
+                  <span class="px-1 py-0.2 rounded bg-[#0B6B53]/15 text-[#0B6B53] text-[9px] font-mono font-bold shrink-0">AUTH</span>
+                } @else {
+                  <span class="px-1 py-0.2 rounded bg-[#A9772D]/20 text-[#A9772D] text-[9px] font-mono font-bold shrink-0">LOGIN</span>
+                }
+              </div>
+              <div class="text-[10px] text-[#8C8672] font-mono mt-0.5 truncate">SSO & User Onboarding</div>
+            </div>
+          </button>
         </div>
 
       </div>
@@ -686,25 +718,52 @@
             [class.ring-2]="activeTab() === 'profile'"
             [class.ring-[#A9772D]]="activeTab() === 'profile'"
             class="flex items-center space-x-2 p-1.5 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#EAE4D4] rounded-xl text-xs font-mono transition-all shadow-2xs cursor-pointer"
-            title="Open Executive Profile">
+            title="Open Executive Profile ({{ userProfile().name }})">
             <div class="w-7 h-7 rounded-lg bg-[#17150F] text-[#F6F3EC] font-bold text-xs flex items-center justify-center">
-              AM
+              {{ userProfile().name.slice(0, 2).toUpperCase() }}
             </div>
             <span class="hidden md:inline font-semibold text-[#17150F] text-xs pr-1">{{ userProfile().name.split(' ')[0] }}</span>
           </button>
+
+          <!-- Quick Sign Out in Header -->
+          <button 
+            type="button"
+            id="btn-header-signout"
+            (click)="handleSignOut()"
+            class="hidden sm:flex items-center space-x-1 px-2.5 py-1.5 rounded-xl border border-rose-200 bg-rose-50/70 hover:bg-rose-100 text-rose-700 text-xs font-mono font-medium transition-all shadow-2xs cursor-pointer"
+            title="Sign Out of Session">
+            <mat-icon class="text-xs text-rose-600">logout</mat-icon>
+            <span class="hidden lg:inline">Sign Out</span>
+          </button>
         } @else {
+          <!-- Sign In Button -->
           <button 
             type="button"
             id="btn-header-signin"
             (click)="openAuthPage('signin')"
-            [class.bg-[#17150F]]="activeTab() === 'auth'"
-            [class.text-[#F6F3EC]]="activeTab() === 'auth'"
-            [class.bg-[#FFFFFF]]="activeTab() !== 'auth'"
-            [class.text-[#17150F]]="activeTab() !== 'auth'"
+            [class.bg-[#17150F]]="activeTab() === 'auth' && authMode() === 'signin'"
+            [class.text-[#F6F3EC]]="activeTab() === 'auth' && authMode() === 'signin'"
+            [class.bg-[#FFFFFF]]="!(activeTab() === 'auth' && authMode() === 'signin')"
+            [class.text-[#17150F]]="!(activeTab() === 'auth' && authMode() === 'signin')"
             class="flex items-center space-x-1.5 px-3 py-2 border border-[#EAE4D4] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer hover:bg-[#F6F3EC]"
             title="Sign In to Enterprise Workspace">
             <mat-icon class="text-xs">login</mat-icon>
             <span>Sign In</span>
+          </button>
+
+          <!-- Sign Up Button -->
+          <button 
+            type="button"
+            id="btn-header-signup"
+            (click)="openAuthPage('signup')"
+            [class.bg-[#0B6B53]]="activeTab() === 'auth' && authMode() === 'signup'"
+            [class.text-[#FFFFFF]]="activeTab() === 'auth' && authMode() === 'signup'"
+            [class.bg-[#0B6B53]/15]="!(activeTab() === 'auth' && authMode() === 'signup')"
+            [class.text-[#0B6B53]]="!(activeTab() === 'auth' && authMode() === 'signup')"
+            class="flex items-center space-x-1.5 px-3.5 py-2 border border-[#0B6B53]/40 rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer hover:bg-[#0B6B53] hover:text-white"
+            title="Create New Enterprise Account">
+            <mat-icon class="text-xs">how_to_reg</mat-icon>
+            <span>Sign Up</span>
           </button>
         }
       </div>
@@ -5615,14 +5674,23 @@
                     <p class="text-xs text-[#8C8672] font-mono mt-0.5">Enter your enterprise credentials to access your CRM workspace.</p>
                   </div>
 
-                  <!-- Google Workspace SSO Fast Button -->
-                  <button 
-                    type="button"
-                    (click)="loginWithGoogleSSO()"
-                    class="w-full py-2.5 px-4 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
-                    <mat-icon class="text-base text-[#A9772D]">verified_user</mat-icon>
-                    <span>Continue with Google Workspace SSO</span>
-                  </button>
+                  <!-- Enterprise SSO Fast Buttons -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <button 
+                      type="button"
+                      (click)="loginWithGoogleSSO()"
+                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
+                      <mat-icon class="text-base text-[#A9772D]">verified_user</mat-icon>
+                      <span class="truncate">Google SSO</span>
+                    </button>
+                    <button 
+                      type="button"
+                      (click)="handleSocialSignIn('Microsoft Entra / Azure AD')"
+                      class="w-full py-2.5 px-3 bg-[#FFFFFF] hover:bg-[#F6F3EC] border border-[#D8D2C2] text-[#17150F] rounded-xl text-xs font-mono font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center space-x-2">
+                      <mat-icon class="text-base text-[#0B6B53]">corporate_fare</mat-icon>
+                      <span class="truncate">Azure AD / Okta</span>
+                    </button>
+                  </div>
 
                   <div class="flex items-center space-x-3">
                     <div class="flex-1 border-t border-[#EAE4D4]"></div>
@@ -5702,6 +5770,16 @@
                       {{ authLoading() ? 'sync' : 'login' }}
                     </mat-icon>
                     <span>{{ authLoading() ? 'Authenticating Credentials...' : 'Sign In to Workspace' }}</span>
+                  </button>
+
+                  <!-- Guest Exploration Button -->
+                  <button 
+                    type="button"
+                    id="btn-explore-guest"
+                    (click)="exploreAsGuest()"
+                    class="w-full py-2.5 px-4 bg-[#F6F3EC] hover:bg-[#EAE4D4] text-[#5C5645] hover:text-[#17150F] border border-[#D8D2C2] rounded-xl text-xs font-mono font-semibold transition-all shadow-2xs flex items-center justify-center space-x-2 cursor-pointer">
+                    <mat-icon class="text-sm text-[#A9772D]">visibility</mat-icon>
+                    <span>Explore Dashboard in Demo Guest Mode</span>
                   </button>
 
                   <div class="text-center pt-2 text-xs font-mono text-[#8C8672]">
@@ -7575,6 +7653,24 @@
             class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-colors cursor-pointer">
             <mat-icon class="text-lg">tune</mat-icon>
             <span>Model Calibration & Settings</span>
+          </button>
+
+          <button 
+            type="button"
+            (click)="openAuthPage('signin'); toggleMobileMenu()"
+            [class.bg-[#F6F3EC]]="activeTab() === 'auth'"
+            [class.text-[#A9772D]]="activeTab() === 'auth'"
+            [class.text-[#17150F]]="activeTab() !== 'auth'"
+            class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl transition-colors cursor-pointer">
+            <mat-icon class="text-lg">lock</mat-icon>
+            <div class="flex items-center space-x-1.5">
+              <span>Sign In / Sign Up</span>
+              @if (isAuthenticated()) {
+                <span class="px-1 py-0.2 rounded bg-[#0B6B53]/15 text-[#0B6B53] text-[9px] font-mono font-bold">AUTH</span>
+              } @else {
+                <span class="px-1 py-0.2 rounded bg-[#A9772D]/20 text-[#A9772D] text-[9px] font-mono font-bold">LOGIN</span>
+              }
+            </div>
           </button>
         </nav>
       </div>
